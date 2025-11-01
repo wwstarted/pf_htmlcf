@@ -1,0 +1,55 @@
+.main-blog {
+  margin-top: 100px;
+}
+
+/* Content tilte and description */
+.content-header {
+  margin-bottom: 30px;
+}
+
+.content-tiltle {
+  font-size: 60px;
+  font-weight: 300;
+  line-height: 95px;
+}
+
+p.content-description {
+  font-size: 18px;
+  font-weight: 300;
+  width: 50%;
+}
+
+@media (max-width: 768px) {
+  p.content-description {
+    width: 100%;
+  }
+}
+
+/* Content categories */
+.content-title {
+  font-weight: 500;
+  font-size: medium;
+  margin-bottom: 10px;
+}
+
+.btn-cate {
+  outline: none;
+  padding: 5px 15px;
+  border-radius: 15px;
+  border: 1px solid #e3e4e8;
+  cursor: pointer;
+  margin-right: 10px;
+  background-color: #fff;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-cate:hover {
+  background: #68b5f5;
+  transform: scale(1.05);
+}
+
+@media (max-width: 480px) {
+  .btn-cate {
+    margin: 10px 0;
+  }
+}

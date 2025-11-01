@@ -1,0 +1,756 @@
+
+/* CSS Reset*/
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "Merriweather", sans-serif;
+  font-weight: 400;
+  color: #222;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  object-fit: cover;
+  object-position: center;
+  height: 100%;
+  width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* Đen nhạt, mỏng */
+  position: fixed;
+  top: 0;
+  background: #fff;
+  z-index: 100;
+  padding: 15px 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-logo {
+  width: 45px;
+  height: 45px;
+  background: linear-gradient(145deg, #449df0, #68b5f5); /* xanh ngọc nhạt */
+  border-radius: 17px; /* bo góc mềm */
+  position: relative;
+  transform-origin: center;
+  transition: all 0.2s ease;
+}
+
+/* hình tròn trắng giữa */
+.header-logo::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 17px;
+  height: 17px;
+  background: white;
+  border-radius: 50%;
+}
+
+.header-left:hover .header-logo {
+  transform: scale(1.1);
+}
+
+.header-name {
+  font-size: 25px;
+  font-weight: 300;
+  margin-left: 10px;
+  transition: all 0.2s ease;
+}
+
+.header-left:hover .header-name {
+  color: #449df0;
+}
+
+.header-menu nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 40px;
+}
+
+.header-menu nav ul li {
+  position: relative;
+}
+
+.header-menu nav ul li a {
+  text-decoration: none;
+  color: #333;
+  padding: 10px 0;
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  text-transform: capitalize;
+}
+
+.header-menu nav ul li a:hover {
+  transform: scale(1.05);
+}
+
+.header-menu nav ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #449df0; /* Màu xanh, bạn có thể đổi màu khác */
+  transition: width 0.3s ease;
+}
+
+.header-menu nav ul li a:hover::after {
+  width: 100%;
+}
+
+a.btn.btn-sign-in {
+  display: inline-block;
+  margin-right: 5px;
+  font-size: 14px;
+  padding: 5px;
+  border-radius: 10px;
+  text-transform: capitalize;
+  transition: all 0.3s ease-in-out;
+}
+
+a.btn.btn-sign-in:hover {
+  background: linear-gradient(45deg, #449df0, #68b5f5);
+  transform: scale(1.05);
+}
+
+a.btn.btn-start-free {
+  display: inline-block;
+  background: linear-gradient(45deg, #449df0, #68b5f5);
+  padding: 5px;
+  border-radius: 10px;
+  color: white;
+  font-size: 14px;
+  text-transform: capitalize;
+  transition: all 0.3s ease-in-out;
+}
+
+a.btn.btn-start-free:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  background: white;
+  z-index: 1000;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  animation: slideUpMenuMobile 1s ease forwards;
+}
+
+@keyframes slideUpMenuMobile {
+  from {
+    opacity: 0.5;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mobile-menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.mobile-menu-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.mobile-menu-close {
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 8px;
+}
+
+.mobile-menu-close:hover {
+  color: #1a1a1a;
+}
+
+.mobile-menu nav ul {
+  list-style: none;
+  padding: 20px;
+}
+
+.mobile-menu nav ul li {
+  margin-bottom: 8px;
+}
+
+.mobile-menu nav ul li a {
+  display: block;
+  padding: 8px 16px;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 300;
+  text-transform: capitalize;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu nav ul li a:hover {
+  background: #f5f5f5;
+  color: #449df0;
+}
+
+.mobile-menu-buttons {
+  padding: 0 32px;
+}
+
+.mobile-menu-buttons .btn {
+  display: block;
+  text-align: center;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+}
+
+.icon-menu-mobile {
+  display: none;
+}
+
+/* Tablet and Mobile Responsive */
+@media (max-width: 1024px) {
+  .header-menu,
+  .header-right {
+    display: none;
+  }
+
+  .icon-menu-mobile {
+    display: block;
+  }
+
+  .menu-overlay {
+    display: block;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-logo-name {
+    font-size: 18px;
+  }
+
+  .mobile-menu {
+    width: 100%;
+  }
+}
+
+/* Footer */
+footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: rgba(245, 243, 249, 0.3);
+  padding: 50px 0 30px 0;
+  margin-top: auto;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding: 20px 0;
+}
+
+.footer-top nav h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 16px;
+  text-transform: capitalize;
+}
+
+.footer-top nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-top nav ul li a {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  text-transform: capitalize;
+  transition: color 0.2s ease;
+}
+
+.footer-top nav ul li a:hover {
+  color: black;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.footer-logo {
+  width: 25px;
+  height: 25px;
+  background: linear-gradient(145deg, #449df0, #68b5f5); /* xanh ngọc nhạt */
+  border-radius: 10px; /* bo góc mềm */
+  position: relative;
+  transform-origin: center;
+  transition: all 0.2s ease;
+}
+
+/* hình tròn trắng giữa */
+.footer-logo::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  background: white;
+  border-radius: 50%;
+}
+
+.footer-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-left: 7px;
+}
+
+.footer-copyright {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+}
+
+/* Mobile Responsive - Giống ảnh mẫu */
+@media (max-width: 768px) {
+  footer {
+    padding: 40px 0 20px 0;
+  }
+
+  .footer-top {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px 20px;
+    padding: 20px 0;
+  }
+
+  .footer-top nav h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .footer-top nav ul {
+    gap: 8px;
+  }
+
+  .footer-top nav ul li a {
+    font-size: 13px;
+  }
+
+  .footer-bottom {
+    gap: 2px;
+    padding: 30px 20px 0 20px;
+    text-align: center;
+  }
+
+  .footer-copyright {
+    order: 1;
+    font-size: 13px;
+  }
+
+  .footer-logo-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .footer-logo-name {
+    font-size: 16px;
+  }
+}
+
+/* Extra small mobile */
+@media (max-width: 480px) {
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 15px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 2px;
+    padding: 30px 20px 0 20px;
+    text-align: center;
+  }
+}
+
+/* Active btn */
+.active {
+  background: #449df0 !important;
+  border: 2px solid #449df0 !important;
+  color: white !important;
+}
+
+/* Icon Style */
+.icon {
+  margin-right: 3px;
+}
+
+/* Text line clamp */
+.text-line-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Style css of Box Blog */
+.blog-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.blog-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(132, 132, 132, 0.4);
+  transition: transform 0.3s ease-in, box-shadow 0.3s ease-in;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+  border: 1px solid rgba(68, 157, 240, 0.5);
+  cursor: pointer;
+}
+
+/* Đổi màu tiêu đề khi hover */
+.blog-card:hover .blog-title {
+  color: #449df0;
+}
+
+.blog-image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.blog-image img {
+  transition: transform 0.6s ease, filter 0.4s ease;
+}
+/* Zoom ảnh khi hover */
+.blog-card:hover img {
+  transform: scale(1.1);
+}
+
+.tag-blog {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  font-size: 12px;
+  font-weight: 300;
+  background-color: #fff;
+  padding: 3px 10px;
+  border: 1px solid #e3e4e8;
+  border-radius: 10px;
+}
+
+.blog-content {
+  padding: 24px;
+}
+
+.blog-meta {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.blog-meta span {
+  display: flex;
+  align-items: center;
+}
+
+.blog-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  line-height: 1.4;
+  -webkit-line-clamp: 2;
+}
+
+.blog-description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  -webkit-line-clamp: 3;
+}
+
+.blog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.blog-author {
+  font-size: 13px;
+  color: #888;
+}
+
+.read-more {
+  color: #449df0;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: gap 0.3s ease;
+}
+
+.blog-card:hover .read-more {
+  gap: 10px;
+}
+
+.read-more::after {
+  content: "→";
+  font-size: 16px;
+}
+
+/* Tablet: 2 cột (từ 768px trở lên) */
+@media (min-width: 768px) {
+  .blog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 cột (từ 1024px trở lên) */
+@media (min-width: 1024px) {
+  .blog-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 30px;
+}
+
+.page-numbers {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination button,
+.pagination a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 50px;
+  height: 50px;
+  padding: 0 16px;
+  border: 1px solid #e3e4e8;
+  background: white;
+  color: #666;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.pagination a:hover {
+  background: #68b5f5;
+  transform: translateY(-2px);
+}
+
+.pagination .active:hover {
+  background: #68b5f5;
+  transform: translateY(-2px);
+}
+
+.pagination .prev,
+.pagination .next {
+  border-radius: 22px;
+  padding: 0 20px;
+  gap: 8px;
+  color: #666;
+  font-weight: 500;
+}
+
+.pagination .prev:hover:not(:disabled),
+.pagination .next:hover:not(:disabled) {
+  background: #449df0;
+}
+
+.pagination .prev::before {
+  content: "‹";
+  font-weight: bold;
+}
+
+.pagination .next::after {
+  content: "›";
+  font-weight: bold;
+}
+
+.pagination .dots {
+  background: transparent;
+  box-shadow: none;
+  cursor: default;
+  pointer-events: none;
+  color: #999;
+}
+
+.pagination .dots:hover {
+  background: transparent;
+  transform: none;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pagination button:disabled:hover {
+  background: white;
+  transform: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .pagination {
+    gap: 4px;
+  }
+
+  .pagination button,
+  .pagination a {
+    min-width: 38px;
+    height: 38px;
+    font-size: 14px;
+    padding: 0 12px;
+  }
+
+  .pagination .prev,
+  .pagination .next {
+    padding: 0 14px;
+  }
+
+  .pagination .prev span,
+  .pagination .next span {
+    display: none;
+  }
+
+  .pagination .prev::before,
+  .pagination .next::after {
+    font-size: 18px;
+  }
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  font-size: 14px;
+  padding-bottom: 10px;
+  line-height: 45px;
+  -webkit-line-clamp: 1;
+}
+
+.breadcrumb a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.breadcrumb a:hover {
+  color: #449df0;
+  text-decoration: underline;
+}
+
+.breadcrumb span {
+  color: #449df0;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* Animation grow-ring */
