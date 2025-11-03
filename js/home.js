@@ -185,3 +185,119 @@ if (sliderWrapper) {
   });
 }
 
+// ======================================== fetch rest api =================================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
+  const proxy_best = document.querySelector(".proxy-list");
+
+  try {
+    const providers = await fetch(`${API_BASE}/providers?per_page=100`);
+    const pvd = await providers.json();
+
+    // Sắp xếp theo rating giảm dần
+    pvd.sort((a, b) => {
+      const ratingA = Number(a?.provider_data?.rating) || 0;
+      const ratingB = Number(b?.provider_data?.rating) || 0;
+      return ratingB - ratingA;
+    });
+
+    pvd.forEach((p, index) => {
+      const pd = p.provider_data || {};
+
+      // Lấy data từ provider_data
+      const logo = pd.logo || "https://via.placeholder.com/150";
+      const title = p.title?.rendered || "No title";
+      const tags = pd.tags || [];
+      const summary = pd.summary || "No description available";
+      const rating = Number(pd.rating) || 0;
+      const price = Number(pd.price) || 0;
+      const advanced = pd.advanced || [];
+
+      // Tạo HTML cho tags
+      const tagsHTML = tags
+        .map(
+          (tag) => `
+          <span class="badge badge-best">
+            <i class="fa-solid fa-medal"></i> ${tag}
+          </span>
+        `
+        )
+        .join("");
+
+      // Tạo HTML cho advanced features
+      const advancedHTML = advanced
+        .map(
+          (feature) => `
+          <div class="feature-item">
+            <i class="fa-solid fa-circle-check"></i>
+            ${feature}
+          </div>
+        `
+        )
+        .join("");
+
+      const fullStars = Math.floor(rating);
+      const starsHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
+
+      // Tạo HTML cho provider card
+      const bannerHTML = `
+        <div class="proxy-item">
+          <div class="proxy-left">
+            <div class="proxy-rank-box">
+              <div class="proxy-rank-border">
+                <div class="proxy-rank">#${index + 1}</div>
+              </div>
+              <i class="proxy-rank-box-icon icon-start fa-regular fa-star"></i>
+            </div>
+            <div class="proxy-logo">
+              <img src="${logo}" alt="${title}">
+            </div>
+            <div class="proxy-details">
+              <h3>${title}</h3>
+              <div class="proxy-badges">
+                ${tagsHTML}
+              </div>
+              <p class="proxy-desc">${summary}</p>
+            </div>
+          </div>
+
+          <div class="proxy-middle">
+            <div class="proxy-rating">
+              <span class="stars">${starsHTML}</span>
+              <span class="rating-score">${rating.toFixed(1)}</span>
+            </div>
+            <div class="rating-text">Based on reviews</div>
+
+            <div class="proxy-features">
+              ${advancedHTML}
+            </div>
+          </div>
+
+          <div class="proxy-right">
+            <div class="proxy-price-box">
+              <div class="price-label">STARTING FROM</div>
+              <div class="price-value">${price}/GB</div>
+              <div class="price-period">per month</div>
+            </div>
+            <a href="http://localhost/PF_HTMLCF/wordpress/oxylabs/?provider_id=${p.id}">
+            <button class="btn-visit">
+              Visit Provider
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </button>
+            </a>
+            <div class="verified-badge">
+              <i class="fa-solid fa-circle-check"></i>
+              Verified Provider
+            </div>
+          </div>
+        </div>
+      `;
+
+      proxy_best.insertAdjacentHTML("beforeend", bannerHTML);
+    });
+  } catch (error) {
+    console.error("Lỗi khi fetch providers:", error);
+    proxy_best.innerHTML = `<p style="color: red;">Không thể tải dữ liệu providers. Vui lòng kiểm tra API.</p>`;
+  }
+});

@@ -45,7 +45,7 @@
             </div>
             <div class="footer-bottom">
                 <div class="logo-footer">
-                    <a href="<?php echo esc_url( home_url('/index.php') ); ?>" class="header-left">
+                    <a href="http://localhost/PF_HTMLCF/wordpress/" class="header-left">
                     <div class="footer-logo"></div>
                     <div class="footer-name">TechFlow</div>
                 </a>
