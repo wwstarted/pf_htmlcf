@@ -1,4 +1,22 @@
+// FAQ Accordion functionality
+   document.querySelectorAll('.oxyl-faq-question').forEach(question => {
+      question.addEventListener('click', function() {
+         const faqItem = this.closest('.oxyl-faq-item');
+         const isActive = faqItem.classList.contains('active_faq');
 
+         // Optional: Close other FAQs (uncomment if you want accordion behavior)
+         // document.querySelectorAll('.oxyl-faq-item').forEach(item => {
+         //     item.classList.remove('active');
+         // });
+
+         // Toggle current FAQ
+         if (isActive) {
+            faqItem.classList.remove('active_faq');
+         } else {
+            faqItem.classList.add('active_faq');
+         }
+      });
+   });
     // Cuộn mượt khi click
     document.querySelectorAll('.review-sidebar a[href^="#"]').forEach(link => {
        link.addEventListener('click', function(e) {
