@@ -1,0 +1,611 @@
+
+        .provider-meta-box {
+            padding: 20px;
+        }
+
+        .provider-field {
+            margin-bottom: 25px;
+        }
+
+        .provider-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .provider-field input[type="text"],
+        .provider-field input[type="number"],
+        .provider-field textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .provider-field textarea {
+            min-height: 80px;
+        }
+
+        .repeatable-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .repeatable-item input {
+            flex: 1;
+        }
+
+        .btn-add,
+        .btn-remove {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .btn-add {
+            background: #0073aa;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #005a87;
+        }
+
+        .btn-remove {
+            background: #dc3232;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .btn-remove:hover {
+            background: #a00;
+        }
+
+        .field-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        
+        
+        .desc-meta-box {
+            padding: 20px;
+        }
+
+        .desc-section {
+            margin-bottom: 35px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #0073aa;
+        }
+
+        .desc-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #0073aa;
+            text-transform: uppercase;
+        }
+
+        .desc-field {
+            margin-bottom: 20px;
+        }
+
+        .desc-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .desc-field textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .desc-repeatable-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .desc-repeatable-item input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .desc-btn-add,
+        .desc-btn-remove {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .desc-btn-add {
+            background: #0073aa;
+            color: white;
+        }
+
+        .desc-btn-add:hover {
+            background: #005a87;
+        }
+
+        .desc-btn-remove {
+            background: #dc3232;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .desc-btn-remove:hover {
+            background: #a00;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .rating-group {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            background: white;
+            position: relative;
+        }
+
+        .rating-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .rating-group-number {
+            font-weight: 700;
+            color: #0073aa;
+            font-size: 15px;
+        }
+
+        .rating-group input[type="text"],
+        .rating-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .rating-group textarea {
+            min-height: 60px;
+        }
+
+        .rating-group input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .rating-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .plan-group {
+            border: 2px solid #0073aa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .plan-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0073aa;
+        }
+
+        .plan-group-title {
+            font-weight: 700;
+            color: #0073aa;
+            font-size: 16px;
+        }
+
+        .plan-basic-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .plan-features-list {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+        }
+
+        .plan-features-list label {
+            font-weight: 600;
+            color: #0073aa;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .plan-feature-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .plan-feature-item input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .plan-feature-item .desc-btn-remove {
+            padding: 6px 10px;
+        }
+
+        .feature-group {
+            border: 2px solid #2ecc71;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .feature-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2ecc71;
+        }
+
+        .feature-group-title {
+            font-weight: 700;
+            color: #2ecc71;
+            font-size: 16px;
+        }
+
+        .feature-group-main-title {
+            margin-bottom: 15px;
+        }
+
+        .feature-group-main-title input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #2ecc71;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .feature-items-list {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f0fdf4;
+            border-radius: 6px;
+        }
+
+        .feature-item-group {
+            border: 1px solid #ddd;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .feature-item-group input,
+        .feature-item-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .feature-item-group textarea {
+            min-height: 50px;
+        }
+
+        .feature-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .perfect-group {
+            border: 2px solid #9b59b6;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .perfect-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #9b59b6;
+        }
+
+        .perfect-group-title {
+            font-weight: 700;
+            color: #9b59b6;
+            font-size: 16px;
+        }
+
+        .perfect-field {
+            margin-bottom: 15px;
+        }
+
+        .perfect-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .perfect-field input,
+        .perfect-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .perfect-field textarea {
+            min-height: 80px;
+        }
+
+        .perfect-field textarea.icon-field {
+            min-height: 120px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .security-support-box {
+            border: 2px solid #e74c3c;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .security-support-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .security-support-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+        }
+
+        .security-support-item h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e74c3c;
+            margin: 0 0 12px 0;
+            text-transform: uppercase;
+        }
+
+        .security-support-list {
+            margin-bottom: 10px;
+        }
+
+        .security-support-list-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+
+        .security-support-list-item input {
+            flex: 1;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .security-support-list-item .desc-btn-remove {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .btn-add-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-add-small:hover {
+            background: #c0392b;
+        }
+
+        .support-box {
+            border: 2px solid #3498db;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+        }
+
+        .support-box .security-support-item h4 {
+            color: #3498db;
+        }
+
+        .support-box .btn-add-small {
+            background: #3498db;
+        }
+
+        .support-box .btn-add-small:hover {
+            background: #2980b9;
+        }
+
+        .review-group {
+            border: 2px solid #f39c12;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .review-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f39c12;
+        }
+
+        .review-group-title {
+            font-weight: 700;
+            color: #f39c12;
+            font-size: 16px;
+        }
+
+        .review-fields-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 120px;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .review-field {
+            margin-bottom: 12px;
+        }
+
+        .review-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .review-field input,
+        .review-field textarea,
+        .review-field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .review-field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .review-field select {
+            cursor: pointer;
+        }
+
+        .faq-group {
+            border: 2px solid #16a085;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .faq-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #16a085;
+        }
+
+        .faq-group-title {
+            font-weight: 700;
+            color: #16a085;
+            font-size: 16px;
+        }
+
+        .faq-field {
+            margin-bottom: 15px;
+        }
+
+        .faq-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #16a085;
+        }
+
+        .faq-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .faq-field.question textarea {
+            min-height: 60px;
+            font-weight: 600;
+        }
+
+        .faq-field.answer textarea {
+            min-height: 100px;
+        }
+
+        @media (max-width: 768px) {
+            .review-fields-grid {
+                grid-template-columns: 1fr;
+            }
+        }
