@@ -213,9 +213,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const image = meta.post_image;
         const sdesc = meta.post_sdesc;
         const shortDesc = truncateWords(sdesc, 25);
+        const url =`${WP_HOME}/singleblog/?post_id=${p.id}`;
 
         const bannerHTML = `
-        <a href="http://localhost/PF_HTMLCF/wordpress/singleblog/?post_id=${p.id}">
+        <a href="${url}">
+
         <div class="article-card">
           <div class="article-image">
             <img
@@ -282,12 +284,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let out = "";
      
-      const title = p.title?.rendered || "";
+    const title = p.title?.rendered || "";
+
+    
+    const url =`${WP_HOME}`;
+    const url1 =`${WP_HOME}/blog`;
+
 
       out += `
-            <a href="http://localhost/PF_HTMLCF/wordpress/" style="color: black; text-decoration: none;" >Home</a> /
-            <a href="http://localhost/PF_HTMLCF/wordpress/blog" style="color: black; text-decoration: none;">Blog</a> /
+            <a href="${url}" style="color: black; text-decoration: none;" >Home</a> /
+            <a href="${url1}" style="color: black; text-decoration: none;">Blog</a> /
             <span style="color: blue"
+            
               >${title}</span
             >
       `;

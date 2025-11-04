@@ -580,7 +580,8 @@ function save_provider_home_info($post_id)
 
     // Thu thập dữ liệu từ form
     if (isset($_POST['provider_tags'])) {
-        $provider_data['tags'] = array_filter($_POST['provider_tags']);
+        // $provider_data['tags'] = array_filter($_POST['provider_tags']);
+        $provider_data['tags'] = array_map('wp_kses_post', array_filter($_POST['provider_tags']));
     }
 
     if (isset($_POST['provider_logo'])) {
@@ -592,7 +593,8 @@ function save_provider_home_info($post_id)
     }
 
     if (isset($_POST['provider_summary'])) {
-        $provider_data['summary'] = sanitize_textarea_field($_POST['provider_summary']);
+        // $provider_data['summary'] = sanitize_textarea_field($_POST['provider_summary']);
+        $provider_data['summary'] = wp_kses_post($_POST['provider_summary']);
     }
 
     if (isset($_POST['provider_rating'])) {
@@ -600,7 +602,9 @@ function save_provider_home_info($post_id)
     }
 
     if (isset($_POST['provider_advanced'])) {
-        $provider_data['advanced'] = array_filter($_POST['provider_advanced']);
+        // $provider_data['advanced'] = array_filter($_POST['provider_advanced']);
+        $provider_data['advanced'] = array_map('wp_kses_post', array_filter($_POST['provider_advanced']));
+
     }
 
     if (isset($_POST['provider_price'])) {
@@ -770,7 +774,7 @@ function provider_description_callback($post)
             gap: 20px;
         }
 
-        .overview-group{
+        .overview-group {
             border: 2px solid #0073aa;
             padding: 15px;
             margin-bottom: 15px;
@@ -1222,6 +1226,57 @@ function provider_description_callback($post)
             min-height: 100px;
         }
 
+        .metric-group {
+            border: 2px solid #0073aa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .metric-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0073aa;
+        }
+
+        .metric-group-title {
+            font-weight: 700;
+            color: #0073aa;
+            font-size: 16px;
+        }
+
+        .metric-field {
+            margin-bottom: 15px;
+        }
+
+        .metric-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .metric-field input,
+        .metric-field textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .metric-field textarea.icon-field {
+            min-height: 120px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+
         @media (max-width: 768px) {
             .review-fields-grid {
                 grid-template-columns: 1fr;
@@ -1566,6 +1621,102 @@ function provider_description_callback($post)
             </div>
 
             <button type="button" class="desc-btn-add add-feature-group">ADD</button>
+        </div>
+
+        <!-- ========== SECTION: PERFORMANCE METRICS ========== -->
+        <div class="desc-section">
+            <div class="desc-section-title">Performance Metrics Section</div>
+
+            <div id="performance-metrics-container">
+                <?php
+                $performance_metrics = isset($desc['performance_metrics']) && is_array($desc['performance_metrics']) ? $desc['performance_metrics'] : array();
+
+                if (!empty($performance_metrics)) {
+                    foreach ($performance_metrics as $metric_index => $metric) {
+                        $icon = isset($metric['icon']) ? $metric['icon'] : '';
+                        $tag = isset($metric['tag']) ? $metric['tag'] : '';
+                        $title = isset($metric['title']) ? $metric['title'] : '';
+                        $value = isset($metric['value']) ? $metric['value'] : '';
+                        $subtitle = isset($metric['subtitle']) ? $metric['subtitle'] : '';
+                        ?>
+                        <div class="metric-group" data-metric-index="<?php echo $metric_index; ?>">
+                            <div class="metric-group-header">
+                                <span class="metric-group-title">Metric #<?php echo $metric_index + 1; ?></span>
+                                <button type="button" class="desc-btn-remove remove-metric-group">✕</button>
+                            </div>
+
+                            <div class="metric-field">
+                                <label>Icon Code (HTML/SVG)</label>
+                                <textarea name="metric_icon[]" class="icon-field"
+                                    placeholder='<svg>...</svg> or HTML icon code'><?php echo esc_textarea($icon); ?></textarea>
+                            </div>
+
+                            <div class="metric-field">
+                                <label>Tag (Label)</label>
+                                <input type="text" name="metric_tag[]" value="<?php echo esc_attr($tag); ?>"
+                                    placeholder="Excellent">
+                            </div>
+
+                            <div class="metric-field">
+                                <label>Title</label>
+                                <input type="text" name="metric_title[]" value="<?php echo esc_attr($title); ?>"
+                                    placeholder="Success Rate">
+                            </div>
+
+                            <div class="metric-field">
+                                <label>Value (Display)</label>
+                                <input type="text" name="metric_value[]" value="<?php echo esc_attr($value); ?>"
+                                    placeholder="99.5% or 0.45s or 10,000">
+                            </div>
+
+                            <div class="metric-field">
+                                <label>Subtitle (Description)</label>
+                                <input type="text" name="metric_subtitle[]" value="<?php echo esc_attr($subtitle); ?>"
+                                    placeholder="Success Rate">
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <div class="metric-group" data-metric-index="0">
+                        <div class="metric-group-header">
+                            <span class="metric-group-title">Metric #1</span>
+                            <button type="button" class="desc-btn-remove remove-metric-group">✕</button>
+                        </div>
+
+                        <div class="metric-field">
+                            <label>Icon Code (HTML/SVG)</label>
+                            <textarea name="metric_icon[]" class="icon-field"
+                                placeholder='<svg>...</svg> or HTML icon code'></textarea>
+                        </div>
+
+                        <div class="metric-field">
+                            <label>Tag (Label)</label>
+                            <input type="text" name="metric_tag[]" value="" placeholder="Excellent">
+                        </div>
+
+                        <div class="metric-field">
+                            <label>Title</label>
+                            <input type="text" name="metric_title[]" value="" placeholder="Success Rate">
+                        </div>
+
+                        <div class="metric-field">
+                            <label>Value (Display)</label>
+                            <input type="text" name="metric_value[]" value="" placeholder="99.5% or 0.45s or 10,000">
+                        </div>
+
+                        <div class="metric-field">
+                            <label>Subtitle (Description)</label>
+                            <input type="text" name="metric_subtitle[]" value="" placeholder="Success Rate">
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+
+            <button type="button" class="desc-btn-add add-metric-group">ADD</button>
         </div>
 
         <!-- ========== SECTION: PERFECT FOR ========== -->
@@ -2562,6 +2713,56 @@ function provider_description_callback($post)
                 }
             });
 
+            // Function để update số thứ tự metric groups
+            function updateMetricNumbers() {
+                $('#performance-metrics-container .metric-group').each(function (index) {
+                    $(this).attr('data-metric-index', index);
+                    $(this).find('.metric-group-title').text('Metric #' + (index + 1));
+                });
+            }
+
+            // Add Metric Group
+            $('.add-metric-group').on('click', function () {
+                var count = $('#performance-metrics-container .metric-group').length;
+                var html = '<div class="metric-group" data-metric-index="' + count + '">' +
+                    '<div class="metric-group-header">' +
+                    '<span class="metric-group-title">Metric #' + (count + 1) + '</span>' +
+                    '<button type="button" class="desc-btn-remove remove-metric-group">✕</button>' +
+                    '</div>' +
+                    '<div class="metric-field">' +
+                    '<label>Icon Code (HTML/SVG)</label>' +
+                    '<textarea name="metric_icon[]" class="icon-field" placeholder="<svg>...</svg> or HTML icon code"></textarea>' +
+                    '</div>' +
+                    '<div class="metric-field">' +
+                    '<label>Tag (Label)</label>' +
+                    '<input type="text" name="metric_tag[]" value="" placeholder="Excellent">' +
+                    '</div>' +
+                    '<div class="metric-field">' +
+                    '<label>Title</label>' +
+                    '<input type="text" name="metric_title[]" value="" placeholder="Success Rate">' +
+                    '</div>' +
+                    '<div class="metric-field">' +
+                    '<label>Value (Display)</label>' +
+                    '<input type="text" name="metric_value[]" value="" placeholder="99.5% or 0.45s or 10,000">' +
+                    '</div>' +
+                    '<div class="metric-field">' +
+                    '<label>Subtitle (Description)</label>' +
+                    '<input type="text" name="metric_subtitle[]" value="" placeholder="Success Rate">' +
+                    '</div>' +
+                    '</div>';
+                $('#performance-metrics-container').append(html);
+            });
+
+            // Remove Metric Group
+            $(document).on('click', '.remove-metric-group', function () {
+                if ($('#performance-metrics-container .metric-group').length > 1) {
+                    $(this).closest('.metric-group').remove();
+                    updateMetricNumbers();
+                } else {
+                    alert('Phải có ít nhất 1 metric!');
+                }
+            });
+
         });
 
 
@@ -2630,24 +2831,25 @@ function save_provider_description($post_id)
             'resources' => array()
         ),
         'user_reviews' => array(),
-        'faq' => array()
+        'faq' => array(),
+        'performance_metrics' => array()
     );
 
     // Thu thập dữ liệu từ form
     if (isset($_POST['desc_overview'])) {
-        $description_data['overview'] = sanitize_textarea_field($_POST['desc_overview']);
+        $description_data['overview'] = wp_kses_post($_POST['desc_overview']);
     }
 
     if (isset($_POST['desc_our_verdict'])) {
-        $description_data['our_verdict'] = sanitize_textarea_field($_POST['desc_our_verdict']);
+        $description_data['our_verdict'] = wp_kses_post($_POST['desc_our_verdict']);
     }
 
     if (isset($_POST['desc_best_for'])) {
-        $description_data['best_for'] = array_filter(array_map('sanitize_text_field', $_POST['desc_best_for']));
+        $description_data['best_for'] = array_filter(array_map('wp_kses_post', $_POST['desc_best_for']));
     }
 
     if (isset($_POST['desc_not_ideal_for'])) {
-        $description_data['not_ideal_for'] = array_filter(array_map('sanitize_text_field', $_POST['desc_not_ideal_for']));
+        $description_data['not_ideal_for'] = array_filter(array_map('wp_kses_post', $_POST['desc_not_ideal_for']));
     }
 
     // Thu thập Detailed Ratings
@@ -2659,8 +2861,8 @@ function save_provider_description($post_id)
         foreach ($titles as $index => $title) {
             if (!empty($title)) {
                 $description_data['detailed_ratings'][] = array(
-                    'title' => sanitize_text_field($title),
-                    'summary' => isset($summaries[$index]) ? sanitize_textarea_field($summaries[$index]) : '',
+                    'title' => wp_kses_post($title),
+                    'summary' => isset($summaries[$index]) ? wp_kses_post($summaries[$index]) : '',
                     'rating' => isset($ratings[$index]) ? floatval($ratings[$index]) : 0
                 );
             }
@@ -2679,13 +2881,13 @@ function save_provider_description($post_id)
                 $plan_features = array();
                 $features_key = 'pricing_plan_features_' . $plan_index;
                 if (isset($_POST[$features_key]) && is_array($_POST[$features_key])) {
-                    $plan_features = array_filter(array_map('sanitize_text_field', $_POST[$features_key]));
+                    $plan_features = array_filter(array_map('wp_kses_post', $_POST[$features_key]));
                 }
 
                 $description_data['pricing_plans'][] = array(
-                    'title' => sanitize_text_field($plan_title),
-                    'price' => isset($plan_prices[$plan_index]) ? sanitize_text_field($plan_prices[$plan_index]) : '',
-                    'min' => isset($plan_mins[$plan_index]) ? sanitize_text_field($plan_mins[$plan_index]) : '',
+                    'title' => wp_kses_post($plan_title),
+                    'price' => isset($plan_prices[$plan_index]) ? wp_kses_post($plan_prices[$plan_index]) : '',
+                    'min' => isset($plan_mins[$plan_index]) ? wp_kses_post($plan_mins[$plan_index]) : '',
                     'features' => $plan_features
                 );
             }
@@ -2710,15 +2912,15 @@ function save_provider_description($post_id)
                     foreach ($item_titles as $item_index => $item_title) {
                         if (!empty($item_title)) {
                             $group_items[] = array(
-                                'title' => sanitize_text_field($item_title),
-                                'summary' => isset($item_summaries[$item_index]) ? sanitize_textarea_field($item_summaries[$item_index]) : ''
+                                'title' => wp_kses_post($item_title),
+                                'summary' => isset($item_summaries[$item_index]) ? wp_kses_post($item_summaries[$item_index]) : ''
                             );
                         }
                     }
                 }
 
                 $description_data['features_overview'][] = array(
-                    'title' => sanitize_text_field($group_title),
+                    'title' => wp_kses_post($group_title),
                     'items' => $group_items
                 );
             }
@@ -2734,10 +2936,10 @@ function save_provider_description($post_id)
         foreach ($pf_titles as $pf_index => $pf_title) {
             if (!empty($pf_title)) {
                 $description_data['perfect_for'][] = array(
-                    'title' => sanitize_text_field($pf_title),
+                    'title' => wp_kses_post($pf_title),
                     'icon' => isset($pf_icons[$pf_index]) ? wp_kses_post($pf_icons[$pf_index]) : '',
-                    'summary' => isset($pf_summaries[$pf_index]) ? sanitize_textarea_field($pf_summaries[$pf_index]) : '',
-                    'desc' => isset($pf_descs[$pf_index]) ? sanitize_textarea_field($pf_descs[$pf_index]) : ''
+                    'summary' => isset($pf_summaries[$pf_index]) ? wp_kses_post($pf_summaries[$pf_index]) : '',
+                    'desc' => isset($pf_descs[$pf_index]) ? wp_kses_post($pf_descs[$pf_index]) : ''
                 );
             }
         }
@@ -2745,30 +2947,30 @@ function save_provider_description($post_id)
 
     // Thu thập Security & Compliance
     if (isset($_POST['security_encryption']) && is_array($_POST['security_encryption'])) {
-        $description_data['security']['encryption'] = array_filter(array_map('sanitize_text_field', $_POST['security_encryption']));
+        $description_data['security']['encryption'] = array_filter(array_map('wp_kses_post', $_POST['security_encryption']));
     }
     if (isset($_POST['security_compliance']) && is_array($_POST['security_compliance'])) {
-        $description_data['security']['compliance'] = array_filter(array_map('sanitize_text_field', $_POST['security_compliance']));
+        $description_data['security']['compliance'] = array_filter(array_map('wp_kses_post', $_POST['security_compliance']));
     }
     if (isset($_POST['security_authentication']) && is_array($_POST['security_authentication'])) {
-        $description_data['security']['authentication'] = array_filter(array_map('sanitize_text_field', $_POST['security_authentication']));
+        $description_data['security']['authentication'] = array_filter(array_map('wp_kses_post', $_POST['security_authentication']));
     }
     if (isset($_POST['security_privacy']) && is_array($_POST['security_privacy'])) {
-        $description_data['security']['privacy'] = array_filter(array_map('sanitize_text_field', $_POST['security_privacy']));
+        $description_data['security']['privacy'] = array_filter(array_map('wp_kses_post', $_POST['security_privacy']));
     }
 
     // Thu thập Customer Support
     if (isset($_POST['support_availability']) && is_array($_POST['support_availability'])) {
-        $description_data['support']['availability'] = array_filter(array_map('sanitize_text_field', $_POST['support_availability']));
+        $description_data['support']['availability'] = array_filter(array_map('wp_kses_post', $_POST['support_availability']));
     }
     if (isset($_POST['support_channels']) && is_array($_POST['support_channels'])) {
-        $description_data['support']['support_channels'] = array_filter(array_map('sanitize_text_field', $_POST['support_channels']));
+        $description_data['support']['support_channels'] = array_filter(array_map('wp_kses_post', $_POST['support_channels']));
     }
     if (isset($_POST['support_languages']) && is_array($_POST['support_languages'])) {
-        $description_data['support']['languages'] = array_filter(array_map('sanitize_text_field', $_POST['support_languages']));
+        $description_data['support']['languages'] = array_filter(array_map('wp_kses_post', $_POST['support_languages']));
     }
     if (isset($_POST['support_resources']) && is_array($_POST['support_resources'])) {
-        $description_data['support']['resources'] = array_filter(array_map('sanitize_text_field', $_POST['support_resources']));
+        $description_data['support']['resources'] = array_filter(array_map('wp_kses_post', $_POST['support_resources']));
     }
     // Thu thập User Reviews
     if (isset($_POST['review_rating']) && is_array($_POST['review_rating'])) {
@@ -2780,11 +2982,11 @@ function save_provider_description($post_id)
 
         foreach ($ratings as $review_index => $rating) {
             $description_data['user_reviews'][] = array(
-                'rating' => sanitize_text_field($rating),
-                'comment' => isset($comments[$review_index]) ? sanitize_textarea_field($comments[$review_index]) : '',
-                'author_name' => isset($author_names[$review_index]) ? sanitize_text_field($author_names[$review_index]) : '',
-                'author_role' => isset($author_roles[$review_index]) ? sanitize_text_field($author_roles[$review_index]) : '',
-                'date' => isset($dates[$review_index]) ? sanitize_text_field($dates[$review_index]) : ''
+                'rating' => wp_kses_post($rating),
+                'comment' => isset($comments[$review_index]) ? wp_kses_post($comments[$review_index]) : '',
+                'author_name' => isset($author_names[$review_index]) ? wp_kses_post($author_names[$review_index]) : '',
+                'author_role' => isset($author_roles[$review_index]) ? wp_kses_post($author_roles[$review_index]) : '',
+                'date' => isset($dates[$review_index]) ? wp_kses_post($dates[$review_index]) : ''
             );
         }
     }
@@ -2797,10 +2999,28 @@ function save_provider_description($post_id)
         foreach ($questions as $faq_index => $question) {
             if (!empty($question)) {
                 $description_data['faq'][] = array(
-                    'question' => sanitize_textarea_field($question),
-                    'answer' => isset($answers[$faq_index]) ? sanitize_textarea_field($answers[$faq_index]) : ''
+                    'question' => wp_kses_post($question),
+                    'answer' => isset($answers[$faq_index]) ? wp_kses_post($answers[$faq_index]) : ''
                 );
             }
+        }
+    }
+
+    if (isset($_POST['metric_icon']) && is_array($_POST['metric_icon'])) {
+        $metric_icons = $_POST['metric_icon'];
+        $metric_tags = isset($_POST['metric_tag']) ? $_POST['metric_tag'] : array();
+        $metric_titles = isset($_POST['metric_title']) ? $_POST['metric_title'] : array();
+        $metric_values = isset($_POST['metric_value']) ? $_POST['metric_value'] : array();
+        $metric_subtitles = isset($_POST['metric_subtitle']) ? $_POST['metric_subtitle'] : array();
+
+        foreach ($metric_icons as $metric_index => $metric_icon) {
+            $description_data['performance_metrics'][] = array(
+                'icon' => wp_kses_post($metric_icon),
+                'tag' => isset($metric_tags[$metric_index]) ? wp_kses_post($metric_tags[$metric_index]) : '',
+                'title' => isset($metric_titles[$metric_index]) ? wp_kses_post($metric_titles[$metric_index]) : '',
+                'value' => isset($metric_values[$metric_index]) ? wp_kses_post($metric_values[$metric_index]) : '',
+                'subtitle' => isset($metric_subtitles[$metric_index]) ? wp_kses_post($metric_subtitles[$metric_index]) : ''
+            );
         }
     }
 
@@ -2883,7 +3103,9 @@ function get_provider_data_for_api($object)
                     'resources' => array()
                 ),
                 'user_reviews' => isset($desc['user_reviews']) ? $desc['user_reviews'] : array(),
-                'faq' => isset($desc['faq']) ? $desc['faq'] : array()
+                'faq' => isset($desc['faq']) ? $desc['faq'] : array(),
+                'performance_metrics' => isset($desc['performance_metrics']) ? $desc['performance_metrics'] : array(),
+
             );
         }
 
@@ -2922,7 +3144,8 @@ function get_provider_data_for_api($object)
                 'resources' => array()
             ),
             'user_reviews' => array(),
-            'faq' => array()
+            'faq' => array(),
+            'performance_metrics'=>array()
         )
     );
 }

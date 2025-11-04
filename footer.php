@@ -45,7 +45,7 @@
             </div>
             <div class="footer-bottom">
                 <div class="logo-footer">
-                    <a href="http://localhost/PF_HTMLCF/wordpress/" class="header-left">
+                    <a href="<?= home_url('/'); ?>" class="header-left">
                     <div class="footer-logo"></div>
                     <div class="footer-name">TechFlow</div>
                 </a>
@@ -56,7 +56,10 @@
             </div>
         </div>
     </footer>
-
+    <script>
+  const WP_HOME = "<?= home_url(); ?>";
+  
+</script>
     <!-- Nhúng file Script -->
     <?php wp_footer(); ?>
     </body>

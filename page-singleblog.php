@@ -57,7 +57,7 @@
           </div>
 
           <div class="back-btn">
-            <a href="http://localhost/PF_HTMLCF/wordpress/blog" class="btn-back"
+            <a href="<?php echo home_url('/blog'); ?>" class="btn-back"
               ><i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Back to
               Blog</a
             >

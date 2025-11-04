@@ -6,7 +6,7 @@
     <main class="main-blog">
       <div class="wrapper">
         <nav class="breadcrumb">
-          <a href="http://localhost/PF_HTMLCF/wordpress/">Proxy</a> /
+          <a href="<?php echo home_url('/'); ?>">Proxy</a> /
           <a href="#">Blog</a> 
         </nav>
         <div class="content-header">

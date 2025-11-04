@@ -102,10 +102,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .map((t) => t.trim())
                 .filter(Boolean);
           const excerpt = meta.post_sdesc || "";
-
+          const url =`${WP_HOME}/singleblog/?post_id=${p.id}`;
           return `
             <div class="blog-card">
-              <a href="http://localhost/PF_HTMLCF/wordpress/singleblog/?post_id=${p.id}">
+               <a href="${url}">
                 <div class="blog-image">
                   <img src="${img}" alt="${title}" />
                   ${
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   <p class="text-line-clamp blog-description">${excerpt}</p>
                   <div class="blog-footer">
                     <span class="blog-author">By ${meta.post_author || "Admin"}</span>
-                    <a href="http://localhost/PF_HTMLCF/wordpress/singleblog/?post_id=${p.id}" class="read-more">Read more</a>
+                    <a href="${url}" class="read-more">Read more</a> 
                   </div>
                 </div>
               </a>

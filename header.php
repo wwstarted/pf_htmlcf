@@ -13,7 +13,7 @@
     <header>
         <div class="wrapper">
             <div class="header">
-                <a href="http://localhost/PF_HTMLCF/wordpress/home/" class="header-left">
+                <a href="<?php echo home_url('/'); ?>" class="header-left">
                     <div class="header-logo"></div>
                     <div class="header-name">ProxyFlow</div>
                 </a>
@@ -24,7 +24,7 @@
                             <li><a href="#">solutions</a></li>
                             <li><a href="#">guides</a></li>
                             <li><a href="#">reviews</a></li>
-                            <li><a href="http://localhost/PF_HTMLCF/wordpress/blog/">blog</a></li>
+                            <li><a href="<?php echo home_url('/blog'); ?>">blog</a></li>
                             <li><a href="#">pricing</a></li>
                         </ul>
                     </nav>
@@ -50,7 +50,7 @@
                     <li><a onclick="closeMobileMenu()" href="#">solutions</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">guides</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">reviews</a></li>
-                    <li><a onclick="closeMobileMenu()" href="http://localhost/PF_HTMLCF/wordpress/blog">blog</a></li>
+                    <li><a onclick="closeMobileMenu()" href="<? echo home_url('/blog'); ?>">blog</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">pricing</a></li>
                 </ul>
             </nav>

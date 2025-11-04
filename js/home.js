@@ -188,6 +188,7 @@ if (sliderWrapper) {
 // ======================================== fetch rest api =================================================
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // const baseURL = window.location.origin;
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   const proxy_best = document.querySelector(".proxy-list");
 
@@ -240,6 +241,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const fullStars = Math.floor(rating);
       const starsHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
 
+      const url =`${WP_HOME}/oxylabs/?provider_id=${p.id}`;
+
       // Tạo HTML cho provider card
       const bannerHTML = `
         <div class="proxy-item">
@@ -280,7 +283,9 @@ document.addEventListener("DOMContentLoaded", async () => {
               <div class="price-value">${price}/GB</div>
               <div class="price-period">per month</div>
             </div>
-            <a href="http://localhost/PF_HTMLCF/wordpress/oxylabs/?provider_id=${p.id}">
+            <a href="${url}">
+            
+
             <button class="btn-visit">
               Visit Provider
               <i class="fa-solid fa-arrow-up-right-from-square"></i>
