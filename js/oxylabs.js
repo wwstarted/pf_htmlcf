@@ -1010,10 +1010,23 @@ document.addEventListener("DOMContentLoaded", async () => {
   
 
       out += `
-        <article class="oxyl-faq-item">
-                   <h3 class="oxyl-faq-question">${question}</h3>
-                   <p class="oxyl-faq-answer">${answer}</p>
-         </article>
+        // <article class="oxyl-faq-item">
+        //            <h3 class="oxyl-faq-question">${question}</h3>
+        //            <p class="oxyl-faq-answer">${answer}</p>
+        //  </article>
+         <article class="oxyl-faq-item">
+                  <h3 class="oxyl-faq-question">
+                     <span>${question}</span>
+                     <span class="toggle-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                     </span>
+                  </h3>
+                  <div class="oxyl-faq-answer-container">
+                     <div class="oxyl-faq-answer-content">
+                        <p class="oxyl-faq-answer">${answer}</p>
+                     </div>
+                  </div>
+               </article>
       `;
     });
 
