@@ -21,10 +21,11 @@ function proxyflow_theme_enqueue_assets()
     // Gọi thêm các file CSS con trong thư mục /css/
     wp_enqueue_style('proxyflow-blog', get_template_directory_uri() . '/css/blog.css', array(), filemtime(get_stylesheet_directory() . '/css/blog.css'));
     wp_enqueue_style('proxyflow-post', get_template_directory_uri() . '/css/post.css', array(), filemtime(get_stylesheet_directory() . '/css/post.css'));
-    wp_enqueue_style('proxyflow-reviews', get_template_directory_uri() . '/css/reviews.css', array(), filemtime(get_stylesheet_directory() . '/css/reviews.css'));
+    wp_enqueue_style('proxyflow-reviews', get_template_directory_uri() . '/css/review.css', array(), filemtime(get_stylesheet_directory() . '/css/review.css'));
     wp_enqueue_style('proxyflow-home', get_template_directory_uri() . '/css/home.css', array(), filemtime(get_stylesheet_directory() . '/css/home.css'));
     wp_enqueue_style('proxyflow-style', get_template_directory_uri() . '/css/style.css', array(), filemtime(get_stylesheet_directory() . '/css/style.css'));
     wp_enqueue_style('wpadmin-style', get_template_directory_uri() . '/css/functions.css', array(), filemtime(get_stylesheet_directory() . '/css/functions.css'));
+    wp_enqueue_style('reviews-style', get_template_directory_uri() . '/css/provider.css', array(), filemtime(get_stylesheet_directory() . '/css/provider.css'));
 
 
     // Gọi file JS trong thư mục /js/
@@ -32,8 +33,67 @@ function proxyflow_theme_enqueue_assets()
     wp_enqueue_script('proxyflow-post', get_template_directory_uri() . '/js/post.js', array('jquery'), filemtime(get_template_directory() . '/js/post.js'), true);
     wp_enqueue_script('proxyflow-home', get_template_directory_uri() . '/js/home.js', array('jquery'), filemtime(get_template_directory() . '/js/home.js'), true);
     wp_enqueue_script('proxyflow-oxylabs', get_template_directory_uri() . '/js/oxylabs.js', array('jquery'), filemtime(get_template_directory() . '/js/oxylabs.js'), true);
-}
+    wp_enqueue_script('proxyflow-reviews', get_template_directory_uri() . '/js/reviews.js', array('jquery'), filemtime(get_template_directory() . '/js/reviews.js'), true);
+
+}   
 add_action('wp_enqueue_scripts', 'proxyflow_theme_enqueue_assets');
+
+// ==========================================URL
+// Thêm rewrite rule để /reviews/<slug> => pagename=reviews + provider_slug
+
+
+function my_reviews_rewrite_rules() {
+    add_rewrite_rule(
+        '^reviews/([^/]+)/?$',
+        'index.php?post_type=providers&name=$matches[1]',
+        'top'
+    );
+}
+add_action('init', 'my_reviews_rewrite_rules');
+
+// Đăng ký query var provider_slug để dùng get_query_var
+function my_reviews_query_vars($vars) {
+    $vars[] = 'provider_slug';
+    return $vars;
+}
+add_filter('query_vars', 'my_reviews_query_vars');
+
+add_filter('template_include', function ($template) {
+    if (is_singular('providers')) {
+        // tìm đến file template page-oxylabs.php
+        $custom_template = locate_template('page-oxylabs.php');
+        if ($custom_template) {
+            return $custom_template;
+        }
+    }
+    return $template;
+});
+
+// ====================== blog ==================
+
+function my_blog_rewrite_rules() {
+    add_rewrite_rule(
+        '^blog/([^/]+)/?$',
+        'index.php?post_type=cpt_posts&name=$matches[1]',
+        'top'
+    );
+}
+add_action('init', 'my_blog_rewrite_rules');
+
+add_filter('template_include', function ($template) {
+
+    if (is_singular('cpt_posts')) {
+        $tpl = locate_template('page-singleblog.php');
+        if ($tpl) return $tpl;
+    }
+
+    if (is_page('blog')) {
+        $tpl = locate_template('page-blog.php');
+        if ($tpl) return $tpl;
+    }
+
+    return $template;
+});
 
 // CATEGORY & SINGLE POST PAGE =================================
 
@@ -249,12 +309,48 @@ function create_providers_cpt()
         'menu_position' => 20,
         'menu_icon' => 'dashicons-images-alt2',
         'supports' => array('title', 'thumbnail', 'custom-fields'),
-        'show_in_rest' => true // quan trọng: enable REST API
+        'show_in_rest' => true, // quan trọng: enable REST API
+        'rewrite' => array(
+            'slug' => 'reviews',   // URL base → /reviews/{slug}
+            'with_front' => false
+        ),
     );
 
     register_post_type('providers', $args);
 }
 add_action('init', 'create_providers_cpt');
+
+function create_provider_category_taxonomy()
+{
+    $labels = array(
+        'name' => 'Provider Categories',
+        'singular_name' => 'Provider Category',
+        'menu_name' => 'Categories',
+        'all_items' => 'All Categories',
+        'edit_item' => 'Edit Category',
+        'update_item' => 'Update Category',
+        'add_new_item' => 'Add New Category',
+        'new_item_name' => 'New Category Name',
+        'search_items' => 'Search Categories',
+        'popular_items' => 'Popular Categories',
+        'separate_items_with_commas' => 'Separate categories with commas',
+        'add_or_remove_items' => 'Add or remove categories',
+        'choose_from_most_used' => 'Choose from the most used categories',
+        'not_found' => 'No categories found.'
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'hierarchical' => true, // true = dạng checkbox tree như Category
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'show_in_rest' => true, // quan trọng: để REST API hoạt động
+        'rewrite' => array('slug' => 'provider-category'),
+    );
+
+    register_taxonomy('provider_category', array('providers'), $args);
+}
+add_action('init', 'create_provider_category_taxonomy');
 
 
 // ================================= META BOX PROVIDER ===================================

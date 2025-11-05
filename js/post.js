@@ -31,23 +31,33 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedPostId = null;
 
-  async function getSharedPostId() {
-    if (sharedPostId) return sharedPostId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("post_id");
-    sharedPostId = postId;
-    console.log("Post ID dùng chung:", sharedPostId);
-    return sharedPostId;
-  }
+  // async function getSharedPostId() {
+  //   if (sharedPostId) return sharedPostId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("post_id");
+  //   sharedPostId = postId;
+  //   console.log("Post ID dùng chung:", sharedPostId);
+  //   return sharedPostId;
+  // }
 
-  const postId = await getSharedPostId();
+  // const postId = await getSharedPostId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const postId = await getSlugFromPath();
 
   /**====================== Fetch header ===============*/
   const single_header = document.querySelector(".single-header");
 
   try {
-    const post = await fetch(`${API_BASE}/cpt_posts/${postId}`);
-    const p = await post.json();
+    const post = await fetch(`${API_BASE}/cpt_posts?slug=${encodeURIComponent(postId)}`);
+    const arr = await post.json();
+
+    const p = arr[0];
     const meta = p.meta || {};
     const title = p.title?.rendered || "No title";
     const date = meta.post_date || p.date || "";
@@ -84,22 +94,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedPostId = null;
 
-  async function getSharedPostId() {
-    if (sharedPostId) return sharedPostId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("post_id");
-    sharedPostId = postId;
-    console.log("Post ID dùng chung:", sharedPostId);
-    return sharedPostId;
-  }
+  // async function getSharedPostId() {
+  //   if (sharedPostId) return sharedPostId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("post_id");
+  //   sharedPostId = postId;
+  //   console.log("Post ID dùng chung:", sharedPostId);
+  //   return sharedPostId;
+  // }
 
-  const postId = await getSharedPostId();
+  // const postId = await getSharedPostId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const postId = await getSlugFromPath();
 
     /**==================== Fetch nội dung bài viết =====================*/
   const singlepost = document.querySelector(".article-body");
   try {
-    const post = await fetch(`${API_BASE}/cpt_posts/${postId}`);
-    const p = await post.json();
+    const post = await fetch(`${API_BASE}/cpt_posts?slug=${encodeURIComponent(postId)}`);
+    const arr = await post.json();
+    const p = arr[0];
     const meta = p.meta;
     const desc = meta._post_desc || "<p>Không có nội dung.</p>";
     singlepost.innerHTML = desc;
@@ -164,16 +183,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedPostId = null;
 
-  async function getSharedPostId() {
-    if (sharedPostId) return sharedPostId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("post_id");
-    sharedPostId = postId;
-    console.log("Post ID dùng chung:", sharedPostId);
-    return sharedPostId;
-  }
+  // async function getSharedPostId() {
+  //   if (sharedPostId) return sharedPostId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("post_id");
+  //   sharedPostId = postId;
+  //   console.log("Post ID dùng chung:", sharedPostId);
+  //   return sharedPostId;
+  // }
 
-  const postId = await getSharedPostId();
+  // const postId = await getSharedPostId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const postId = await getSlugFromPath();
 
     /* ================fetch related================== */
   const related = document.querySelector(".articles-grid");
@@ -190,7 +217,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const post = await fetch(`${API_BASE}/cpt_posts?per_page=100`);
     const relate = await post.json();
 
-    const filteredPosts = relate.filter(post => post.id !== postId);
+    const post1 = await fetch(`${API_BASE}/cpt_posts?slug=${encodeURIComponent(postId)}`);
+    const arr = await post1.json();
+    const p1 = arr[0];
+
+    const filteredPosts = relate.filter(post => post.id !== p1.id);
 
     function getRandomPosts(posts, count = 3) {
       const shuffled = posts.sort(() => 0.5 - Math.random());
@@ -213,37 +244,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         const image = meta.post_image;
         const sdesc = meta.post_sdesc;
         const shortDesc = truncateWords(sdesc, 25);
-        const url =`${WP_HOME}/singleblog/?post_id=${p.id}`;
+        const url1 = `${WP_HOME}/blog/${encodeURIComponent(p.slug)}`;
 
         const bannerHTML = `
-        <a href="${url}">
+       
 
         <div class="article-card">
-          <div class="article-image">
-            <img
-              src="${image}"
-              alt="${title}"
-            />
-            ${tags.length > 0
-                ? `<div class="tag-list">${tags
-                    .map((tag) => `<span class="tag">${tag}</span>`)
-                    .join("")}</div>`
-                : ""}
-          </div>
-          <div class="article-content">
-            <h3>${title}</h3>
-            <p>
-              ${shortDesc}
-            </p>
-            <span class="date"
-              ><i class="fa-regular fa-calendar"></i> ${date}</span
-            >
-            <span class="read-time"
-              ><i class="fa-regular fa-clock"></i> 8 min read</span
-            >
-          </div>
+         <a href="${url1}">
+            <div class="article-image">
+              <img
+                src="${image}"
+                alt="${title}"
+              />
+              ${tags.length > 0
+                  ? `<div class="tag-list">${tags
+                      .map((tag) => `<span class="tag">${tag}</span>`)
+                      .join("")}</div>`
+                  : ""}
+            </div>
+            <div class="article-content">
+              <h3>${title}</h3>
+              <p class="text-line-clamp">
+                ${shortDesc}
+              </p>
+              <span class="date"
+                ><i class="fa-regular fa-calendar"></i> ${date}</span
+              >
+              <span class="read-time"
+                ><i class="fa-regular fa-clock"></i> 8 min read</span
+              >
+            </div>
+          </a>
         </div>
-        </a>
+        
         `;
         related.insertAdjacentHTML("beforeend", bannerHTML);
       });
@@ -294,7 +327,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       out += `
             <a href="${url}" style="color: black; text-decoration: none;" >Home</a> /
             <a href="${url1}" style="color: black; text-decoration: none;">Blog</a> /
-            <span style="color: blue"
+            <span style="color: black"
             
               >${title}</span
             >

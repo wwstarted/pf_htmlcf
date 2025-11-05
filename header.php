@@ -23,7 +23,7 @@
                             <li><a href="#">proxies</a></li>
                             <li><a href="#">solutions</a></li>
                             <li><a href="#">guides</a></li>
-                            <li><a href="#">reviews</a></li>
+                            <li><a href="<?php echo home_url('/reviews'); ?>">reviews</a></li>
                             <li><a href="<?php echo home_url('/blog'); ?>">blog</a></li>
                             <li><a href="#">pricing</a></li>
                         </ul>

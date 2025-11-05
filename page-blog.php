@@ -6,8 +6,8 @@
     <main class="main-blog">
       <div class="wrapper">
         <nav class="breadcrumb">
-          <a href="<?php echo home_url('/'); ?>">Proxy</a> /
-          <a href="#">Blog</a> 
+          <a href="<?php echo home_url('/'); ?>" style="color: black; text-decoration: none;">Proxy</a> /
+          <a href="" style="color: black; text-decoration: none;">Blog</a> 
         </nav>
         <div class="content-header">
           <div class="content-tiltle">Blog</div>

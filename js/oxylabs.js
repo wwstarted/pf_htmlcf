@@ -43,29 +43,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
    let sharedowId = null;
 
-   async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+   // Lấy slug từ pathname, ví dụ /reviews/proxy-seller
+function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
 
-  const owId = await getSharedOverviewId();
+ const owId = await getSlugFromPath();
+
+  //  async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
+
+  // const owId = await getSharedOverviewId();
+  
 
   const proxy_best = document.querySelector(".card-wrapper");
 
   try {
-    const providers = await fetch(`${API_BASE}/providers/${owId}`);
+    const providers = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
     const pvd = await providers.json();
 
     
-   const pd = pvd.provider_data || {};
+  //  const pd = pvd.provider_data || {};
+
+    const pv = pvd[0];   // ✅ Lấy object trong array
+    const pd = pv.provider_data || {};   // ✅ ACF nằm trong pvd.acf
 
       // Lấy data từ provider_data
    const logo = pd?.logo;
-    const title = pvd.title?.rendered || "No title";
+    const title = pv.title?.rendered || "No title";
     const summary = pd?.summary;
     const rating = Number(pd.rating);
     const thumbnail = pd?.thumbnail;
@@ -166,25 +179,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
    let sharedowId = null;
 
-   async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  //  async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
+
   
   const banner = document.querySelector("#overview");
   
 
   try {
-    const post = await fetch(`${API_BASE}/providers/${owId}`);
+    const post = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
     const p = await post.json();
 
-    const ov = p.provider_data?.description || {};
+    const arr = p[0];
+
+
+    const ov = arr.provider_data?.description || {};
     const overview = ov?.overview;
     const ourverdict = ov?.our_verdict;
     const bestfor = ov?.best_for;
@@ -261,20 +286,30 @@ document.addEventListener("DOMContentLoaded", async () => {
  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
    let sharedowId = null;
 
-   async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  //  async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
   
   try {
-    const post = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await post.json();
+    const post = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await post.json();
+
+    const p = arr[0];
     const acf = p.provider_data?.description;
 
     const detailedRatings = acf?.detailed_ratings;
@@ -328,26 +363,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   
-  async function getSharedOverviewId() {
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    console.log("✅ Post ID:", postId);
-    return postId;
-  }
+  // async function getSharedOverviewId() {
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   console.log("✅ Post ID:", postId);
+  //   return postId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
   const pricingContainer = document.querySelector(".oxyl-pricing-grid");
 
 
   try {
     console.log("🔄 Fetching pricing plans...");
-    const response = await fetch(`${API_BASE}/providers/${owId}`);
+    const response = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
     
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     
-    const pvd = await response.json();
+    const arr = await response.json();
+    const pvd = arr[0];
+
     const pricingPlans = pvd.provider_data?.description?.pricing_plans || [];
     
     console.log("✅ Pricing plans data:", pricingPlans);
@@ -435,20 +479,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const p = arr[0];
 
     const featuresOverview = p?.provider_data?.description?.features_overview;
 
@@ -518,16 +572,24 @@ document.addEventListener("DOMContentLoaded", async () => {
  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
   function renderPerfectFor(acf) {
     const perfectFor = acf?.description?.perfect_for;
@@ -559,10 +621,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const provider = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const provider = arr[0];
 
     const acf = provider?.provider_data;
+
+    
 
     // Render
     renderPerfectFor(acf);
@@ -580,25 +646,35 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
 
    const banner = document.querySelector(".oxyl-security-grid");
   
 
   try {
-    const post = await fetch(`${API_BASE}/providers/${owId}`);
+    const post = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
 
-    const p = await post.json();
+    const arr = await post.json();
+
+    const p = arr[0];
 
     const sec = p?.provider_data?.description?.security|| {};
 
@@ -731,9 +807,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   
 
   try {
-    const post = await fetch(`${API_BASE}/providers/${owId}`);
+    const post = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
 
-    const p = await post.json();
+    const arr = await post.json();
+
+    const p = arr[0];
 
     const sec = p?.provider_data?.description?.support || {};
 
@@ -852,20 +930,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const p = arr[0];
 
     const userReviews = p?.provider_data?.description?.user_reviews;
 
@@ -958,20 +1046,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const p = arr[0];
 
     const userReviews = p?.provider_data?.description?.faq;
 
@@ -992,10 +1090,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   
 
       out += `
-        <article class="oxyl-faq-item">
-                   <h3 class="oxyl-faq-question">${question}</h3>
-                   <p class="oxyl-faq-answer">${answer}</p>
-         </article>
+  
+         <article class="oxyl-faq-item">
+                  <h3 class="oxyl-faq-question">
+                     <span>${question}</span>
+                     <span class="toggle-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                     </span>
+                  </h3>
+                  <div class="oxyl-faq-answer-container">
+                     <div class="oxyl-faq-answer-content">
+                        <p class="oxyl-faq-answer">${answer}</p>
+                     </div>
+                  </div>
+               </article>
       `;
     });
 
@@ -1007,6 +1115,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.error("❌ Error loading user reviews:", err);
   }
+  // FAQ Accordion functionality
+   document.querySelectorAll('.oxyl-faq-question').forEach(question => {
+      question.addEventListener('click', function() {
+         const faqItem = this.closest('.oxyl-faq-item');
+         const isActive = faqItem.classList.contains('active_faq');
+
+         // Optional: Close other FAQs (uncomment if you want accordion behavior)
+         // document.querySelectorAll('.oxyl-faq-item').forEach(item => {
+         //     item.classList.remove('active');
+         // });
+
+         // Toggle current FAQ
+         if (isActive) {
+            faqItem.classList.remove('active_faq');
+         } else {
+            faqItem.classList.add('active_faq');
+         }
+      });
+   });
 
 });  
 
@@ -1016,20 +1143,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const p = arr[0];
 
     const performanceMetrics = p?.provider_data?.description?.performance_metrics;
     const container = document.querySelector(".oxyl-stats-grid");
@@ -1088,7 +1225,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function generateCircularProgress(value, maxValue = 1) {
-      const percentage = Math.min((value / maxValue) * 75, 75);
+      const percentage = Math.min(((maxValue - value) / maxValue) * 75, 75);
       const radius = 50;
       const circumference = 2 * Math.PI * radius;
       const offset = circumference - (percentage / 100) * circumference;
@@ -1181,22 +1318,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedPostId = null;
 
-  async function getSharedPostId() {
-    if (sharedPostId) return sharedPostId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedPostId = postId;
-    console.log("Post ID dùng chung:", sharedPostId);
-    return sharedPostId;
-  }
+  // async function getSharedPostId() {
+  //   if (sharedPostId) return sharedPostId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedPostId = postId;
+  //   console.log("Post ID dùng chung:", sharedPostId);
+  //   return sharedPostId;
+  // }
 
-  const owId = await getSharedPostId();
+  // const owId = await getSharedPostId();
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
 
   
   try {
-    const res = await fetch(`${API_BASE}/providers/${owId}`);
-    const p = await res.json();
+    const res = await fetch(`${API_BASE}/providers?slug=${encodeURIComponent(owId)}`);
+    const arr = await res.json();
+
+    const p = arr[0];
 
     const container = document.querySelector("#bd_ol");
     
@@ -1207,12 +1354,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const title = p.title?.rendered || "title";
 
     const url =`${WP_HOME}`;
+    const r_url = `${WP_REVIEWS}`;
     
-
     out += `
-         <a href="${url}">ProxyFlow</a> <span>/</span>
-          <a href="#">Providers</a> <span>/</span>
-          <span>${title}</span>
+         <a href="${url}" style="color: black; text-decoration: none;" >ProxyFlow</a> <span>/</span>
+          <a href="${r_url}" style="color: black; text-decoration: none;">Reviews</a> <span>/</span>
+          <span style="color: black; ">${title}</span>
       `;
     
 

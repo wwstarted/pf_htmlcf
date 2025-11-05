@@ -58,6 +58,7 @@
     </footer>
     <script>
   const WP_HOME = "<?= home_url(); ?>";
+  const WP_REVIEWS = "<?= home_url('/reviews'); ?>";
   
 </script>
     <!-- Nhúng file Script -->

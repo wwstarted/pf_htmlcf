@@ -241,7 +241,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const fullStars = Math.floor(rating);
       const starsHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
 
-      const url =`${WP_HOME}/oxylabs/?provider_id=${p.id}`;
+      // const url =`${WP_HOME}/oxylabs/?provider_id=${p.id}`;
+      const url = `${WP_HOME}/reviews/${encodeURIComponent(p.slug)}`;
 
       // Tạo HTML cho provider card
       const bannerHTML = `
@@ -271,7 +272,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               <span class="rating-score">${rating.toFixed(1)}</span>
             </div>
             <div class="rating-text">Based on reviews</div>
-
             <div class="proxy-features">
               ${advancedHTML}
             </div>
@@ -284,8 +284,6 @@ document.addEventListener("DOMContentLoaded", async () => {
               <div class="price-period">per month</div>
             </div>
             <a href="${url}">
-            
-
             <button class="btn-visit">
               Visit Provider
               <i class="fa-solid fa-arrow-up-right-from-square"></i>

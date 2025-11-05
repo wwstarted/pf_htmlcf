@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const postsPerPage = 6;
 
   try {
-    /** --- Load danh mục --- **/
     const cateRes = await fetch(`${API_BASE}/post_category?per_page=100`);
     const categories = await cateRes.json();
 
@@ -71,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         .join("")}
     `;
 
-    /** --- Hàm fetch bài viết từ API --- **/
+    /** --- fetch bài viết từ API --- **/
     async function fetchPosts(categoryId = "all") {
       let url = `${API_BASE}/cpt_posts?_embed&per_page=100`;
       if (categoryId !== "all") url += `&post_category=${categoryId}`;
@@ -102,10 +101,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .map((t) => t.trim())
                 .filter(Boolean);
           const excerpt = meta.post_sdesc || "";
-          const url =`${WP_HOME}/singleblog/?post_id=${p.id}`;
+          const url1 = `${WP_HOME}/blog/${encodeURIComponent(p.slug)}`;
           return `
             <div class="blog-card">
-               <a href="${url}">
+               <a href="${url1}">
                 <div class="blog-image">
                   <img src="${img}" alt="${title}" />
                   ${
@@ -125,7 +124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                   <p class="text-line-clamp blog-description">${excerpt}</p>
                   <div class="blog-footer">
                     <span class="blog-author">By ${meta.post_author || "Admin"}</span>
-                    <a href="${url}" class="read-more">Read more</a> 
+                    <a href="${url1}" class="read-more">Read more</a> 
                   </div>
                 </div>
               </a>
