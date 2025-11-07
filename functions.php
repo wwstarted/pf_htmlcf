@@ -39,6 +39,12 @@ function proxyflow_theme_enqueue_assets()
 add_action('wp_enqueue_scripts', 'proxyflow_theme_enqueue_assets');
 
 // ==========================================URL
+// ==================== meta box user review hone() page
+
+
+
+
+
 // Thêm rewrite rule để /reviews/<slug> => pagename=reviews + provider_slug
 
 
@@ -95,7 +101,7 @@ add_filter('template_include', function ($template) {
     return $template;
 });
 
-// CATEGORY & SINGLE POST PAGE =================================
+//===================================== CATEGORY & SINGLE POST PAGE =================================
 
 //=========================================CPT posts
 function create_cpt_posts_cpt()
@@ -367,6 +373,452 @@ function provider_home_info_meta_box()
     );
 }
 add_action('add_meta_boxes', 'provider_home_info_meta_box');
+// ==================================================================================================
+
+function provider_home_reviews_meta_box()
+{
+    add_meta_box(
+        'provider_home_reviews',
+        'User Reviews (Home Page)',
+        'provider_home_reviews_callback',
+        'page',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'provider_home_reviews_meta_box');
+
+
+
+// Render meta box HTML
+function provider_home_reviews_callback($post)
+{
+    wp_nonce_field('provider_home_reviews_nonce', 'provider_home_reviews_nonce_field');
+
+    // Lấy dữ liệu đã lưu
+    $saved_data = get_post_meta($post->ID, '_provider_home_reviews', true);
+
+    if (!empty($saved_data) && is_string($saved_data)) {
+        $saved_data = maybe_unserialize($saved_data);
+    }
+
+    // Định nghĩa $desc từ saved_data (tương tự metabox cũ)
+    $desc = isset($saved_data['description']) && is_array($saved_data['description']) 
+        ? $saved_data['description'] 
+        : array();
+
+    // Set default values cho User Reviews
+    $user_reviews = isset($desc['user_reviews']) && is_array($desc['user_reviews']) 
+        ? $desc['user_reviews'] 
+        : array();
+
+    ?>
+
+    <style>
+        .desc-meta-box {
+            padding: 20px;
+        }
+
+        .desc-section {
+            margin-bottom: 35px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #0073aa;
+        }
+
+        .desc-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #0073aa;
+            text-transform: uppercase;
+        }
+
+        .desc-field {
+            margin-bottom: 20px;
+        }
+
+        .desc-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .desc-field textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .desc-repeatable-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .desc-repeatable-item input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .desc-btn-add,
+        .desc-btn-remove {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .desc-btn-add {
+            background: #0073aa;
+            color: white;
+        }
+
+        .desc-btn-add:hover {
+            background: #005a87;
+        }
+
+        .desc-btn-remove {
+            background: #dc3232;
+            color: white;
+            padding: 8px 12px;
+        }
+
+        .desc-btn-remove:hover {
+            background: #a00;
+        }
+
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+
+        .review-group {
+            border: 2px solid #0073aa;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: white;
+            position: relative;
+        }
+
+        .review-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0073aa;
+        }
+
+        .review-group-title {
+            font-weight: 700;
+            color: #0073aa;
+            font-size: 16px;
+        }
+
+        .review-fields-grid {
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 120px;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .review-field {
+            margin-bottom: 12px;
+        }
+
+        .review-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .review-field input,
+        .review-field textarea,
+        .review-field select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .review-field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .review-field select {
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 768px) {
+            .review-fields-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <div class="desc-meta-box">
+        <!-- ========== SECTION: USER REVIEWS ========== -->
+        <div class="desc-section">
+            <div class="desc-section-title">User Reviews Section</div>
+
+            <div id="user-reviews-container">
+                <?php
+                if (!empty($user_reviews)) {
+                    foreach ($user_reviews as $review_index => $review) {
+                        $rating = isset($review['rating']) ? $review['rating'] : '5';
+                        $comment = isset($review['comment']) ? $review['comment'] : '';
+                        $author_name = isset($review['author_name']) ? $review['author_name'] : '';
+                        $author_role = isset($review['author_role']) ? $review['author_role'] : '';
+                        $date = isset($review['date']) ? $review['date'] : '';
+                        ?>
+                        <div class="review-group" data-review-index="<?php echo $review_index; ?>">
+                            <div class="review-group-header">
+                                <span class="review-group-title">Review #<?php echo $review_index + 1; ?></span>
+                                <button type="button" class="desc-btn-remove remove-review-group">✕</button>
+                            </div>
+
+                            <div class="review-fields-grid">
+                                <div class="review-field">
+                                    <label>Rating</label>
+                                    <select name="review_rating[]">
+                                        <option value="5" <?php selected($rating, '5'); ?>>⭐⭐⭐⭐⭐</option>
+                                        <option value="4" <?php selected($rating, '4'); ?>>⭐⭐⭐⭐</option>
+                                        <option value="3" <?php selected($rating, '3'); ?>>⭐⭐⭐</option>
+                                        <option value="2" <?php selected($rating, '2'); ?>>⭐⭐</option>
+                                        <option value="1" <?php selected($rating, '1'); ?>>⭐</option>
+                                    </select>
+                                </div>
+
+                                <div class="review-field">
+                                    <label>Author Name</label>
+                                    <input type="text" name="review_author_name[]" value="<?php echo esc_attr($author_name); ?>"
+                                        placeholder="Sarah Johnson">
+                                </div>
+
+                                <div class="review-field">
+                                    <label>Author Role</label>
+                                    <input type="text" name="review_author_role[]" value="<?php echo esc_attr($author_role); ?>"
+                                        placeholder="Freelancer - Designer">
+                                </div>
+
+                                <div class="review-field">
+                                    <label>Date</label>
+                                    <input type="text" name="review_date[]" value="<?php echo esc_attr($date); ?>"
+                                        placeholder="3 months ago">
+                                </div>
+                            </div>
+
+                            <div class="review-field">
+                                <label>Comment</label>
+                                <textarea name="review_comment[]"
+                                    placeholder="Oxylabs has been instrumental in our data collection operations..."><?php echo esc_textarea($comment); ?></textarea>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <div class="review-group" data-review-index="0">
+                        <div class="review-group-header">
+                            <span class="review-group-title">Review #1</span>
+                            <button type="button" class="desc-btn-remove remove-review-group">✕</button>
+                        </div>
+
+                        <div class="review-fields-grid">
+                            <div class="review-field">
+                                <label>Rating</label>
+                                <select name="review_rating[]">
+                                    <option value="5">⭐⭐⭐⭐⭐</option>
+                                    <option value="4">⭐⭐⭐⭐</option>
+                                    <option value="3">⭐⭐⭐</option>
+                                    <option value="2">⭐⭐</option>
+                                    <option value="1">⭐</option>
+                                </select>
+                            </div>
+
+                            <div class="review-field">
+                                <label>Author Name</label>
+                                <input type="text" name="review_author_name[]" value="" placeholder="Sarah Johnson">
+                            </div>
+
+                            <div class="review-field">
+                                <label>Author Role</label>
+                                <input type="text" name="review_author_role[]" value="" placeholder="Freelancer - Designer">
+                            </div>
+
+                            <div class="review-field">
+                                <label>Date</label>
+                                <input type="text" name="review_date[]" value="" placeholder="3 months ago">
+                            </div>
+                        </div>
+
+                        <div class="review-field">
+                            <label>Comment</label>
+                            <textarea name="review_comment[]"
+                                placeholder="Oxylabs has been instrumental in our data collection operations..."></textarea>
+                        </div>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
+
+            <button type="button" class="desc-btn-add add-review-group">+ Add New Review</button>
+        </div>
+
+
+    </div>
+
+    <script>
+        jQuery(document).ready(function ($) {
+
+            // ========== USER REVIEWS ==========
+
+            // Add Review Group
+            $('.add-review-group').on('click', function () {
+                var count = $('#user-reviews-container .review-group').length;
+                var html = '<div class="review-group" data-review-index="' + count + '">' +
+                    '<div class="review-group-header">' +
+                    '<span class="review-group-title">Review #' + (count + 1) + '</span>' +
+                    '<button type="button" class="desc-btn-remove remove-review-group">✕</button>' +
+                    '</div>' +
+                    '<div class="review-fields-grid">' +
+                    '<div class="review-field">' +
+                    '<label>Rating</label>' +
+                    '<select name="review_rating[]">' +
+                    '<option value="5">⭐⭐⭐⭐⭐</option>' +
+                    '<option value="4">⭐⭐⭐⭐</option>' +
+                    '<option value="3">⭐⭐⭐</option>' +
+                    '<option value="2">⭐⭐</option>' +
+                    '<option value="1">⭐</option>' +
+                    '</select>' +
+                    '</div>' +
+                    '<div class="review-field">' +
+                    '<label>Author Name</label>' +
+                    '<input type="text" name="review_author_name[]" value="" placeholder="Sarah Johnson">' +
+                    '</div>' +
+                    '<div class="review-field">' +
+                    '<label>Author Role</label>' +
+                    '<input type="text" name="review_author_role[]" value="" placeholder="Freelancer - Designer">' +
+                    '</div>' +
+                    '<div class="review-field">' +
+                    '<label>Date</label>' +
+                    '<input type="text" name="review_date[]" value="" placeholder="3 months ago">' +
+                    '</div>' +
+                    '</div>' +
+                    '<div class="review-field">' +
+                    '<label>Comment</label>' +
+                    '<textarea name="review_comment[]" placeholder="Oxylabs has been instrumental..."></textarea>' +
+                    '</div>' +
+                    '</div>';
+                $('#user-reviews-container').append(html);
+                updateReviewNumbers();
+            });
+
+            // Remove Review Group
+            $(document).on('click', '.remove-review-group', function () {
+                if ($('#user-reviews-container .review-group').length > 1) {
+                    $(this).closest('.review-group').remove();
+                    updateReviewNumbers();
+                } else {
+                    alert('Phải có ít nhất 1 review!');
+                }
+            });
+
+            // Function cập nhật số thứ tự reviews
+            function updateReviewNumbers() {
+                $('#user-reviews-container .review-group').each(function(index) {
+                    $(this).attr('data-review-index', index);
+                    $(this).find('.review-group-title').text('Review #' + (index + 1));
+                });
+            }
+
+        });
+    </script>
+
+    <?php
+}
+
+// Lưu dữ liệu Description
+// Lưu dữ liệu Home Reviews
+function save_provider_home_reviews($post_id)
+{
+    // Kiểm tra nonce
+    if (
+        !isset($_POST['provider_home_reviews_nonce_field']) ||
+        !wp_verify_nonce($_POST['provider_home_reviews_nonce_field'], 'provider_home_reviews_nonce')
+    ) {
+        return;
+    }
+
+    // Kiểm tra autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    // Kiểm tra quyền
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+
+    // Lấy data hiện tại
+    $existing_data = get_post_meta($post_id, '_provider_home_reviews', true);
+    $existing_data = maybe_unserialize($existing_data);
+
+    if (!is_array($existing_data)) {
+        $existing_data = array();
+    }
+
+    // Chuẩn bị description data
+    $description_data = array(
+        'user_reviews' => array(),
+    );
+
+    // Thu thập User Reviews
+    if (isset($_POST['review_rating']) && is_array($_POST['review_rating'])) {
+        $ratings = $_POST['review_rating'];
+        $comments = isset($_POST['review_comment']) ? $_POST['review_comment'] : array();
+        $author_names = isset($_POST['review_author_name']) ? $_POST['review_author_name'] : array();
+        $author_roles = isset($_POST['review_author_role']) ? $_POST['review_author_role'] : array();
+        $dates = isset($_POST['review_date']) ? $_POST['review_date'] : array();
+
+        foreach ($ratings as $review_index => $rating) {
+            $description_data['user_reviews'][] = array(
+                'rating' => sanitize_text_field($rating),
+                'comment' => wp_kses_post($comments[$review_index] ?? ''),
+                'author_name' => sanitize_text_field($author_names[$review_index] ?? ''),
+                'author_role' => sanitize_text_field($author_roles[$review_index] ?? ''),
+                'date' => sanitize_text_field($dates[$review_index] ?? '')
+            );
+        }
+    }
+
+    // Merge với data cũ
+    $existing_data['description'] = $description_data;
+
+    // Lưu vào meta key đúng
+    update_post_meta($post_id, '_provider_home_reviews', maybe_serialize($existing_data));
+}
+add_action('save_post_page', 'save_provider_home_reviews');
+
+// =============================================================================================================================
 
 //================ Render meta box HTML=======================
 function provider_home_info_callback($post)
@@ -728,7 +1180,7 @@ function provider_description_meta_box()
 add_action('add_meta_boxes', 'provider_description_meta_box');
 
 // Render meta box HTML
-function provider_description_callback($post)
+    function provider_description_callback($post)
 {
     wp_nonce_field('provider_description_nonce', 'provider_description_nonce_field');
 
@@ -3245,6 +3697,49 @@ function get_provider_data_for_api($object)
         )
     );
 }
+
+function get_page_home_reviews_for_api($object)
+{
+    $page_id = $object['id'];
+
+    // Lấy dữ liệu serialize từ meta
+    $home_reviews_data = get_post_meta($page_id, '_provider_home_reviews', true);
+
+    // Unserialize nếu có dữ liệu
+    if (!empty($home_reviews_data) && is_string($home_reviews_data)) {
+        $home_reviews_data = maybe_unserialize($home_reviews_data);
+    }
+
+    // Trả về data đã unserialize hoặc object rỗng
+    if (is_array($home_reviews_data)) {
+        // Lấy description data (chỉ có user_reviews)
+        $description_data = array();
+        if (isset($home_reviews_data['description']) && is_array($home_reviews_data['description'])) {
+            $desc = $home_reviews_data['description'];
+
+            $description_data = array(
+                'user_reviews' => isset($desc['user_reviews']) ? $desc['user_reviews'] : array()
+            );
+        }
+
+        return array('home_reviews' => $description_data);
+    }
+
+    // Return default structure nếu không có data
+    return array(
+        'home_reviews' => array(
+            'user_reviews' => array()
+        )
+    );
+}
+
+// Đăng ký field cho REST API (Page - post type mặc định của WP)
+add_action('rest_api_init', function () {
+    register_rest_field('page', 'home_reviews_data', array(
+        'get_callback' => 'get_page_home_reviews_for_api',
+        'schema' => null,
+    ));
+});
 
 
 

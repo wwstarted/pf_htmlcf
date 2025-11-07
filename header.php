@@ -50,7 +50,7 @@
                     <li><a onclick="closeMobileMenu()" href="#">solutions</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">guides</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">reviews</a></li>
-                    <li><a onclick="closeMobileMenu()" href="<? echo home_url('/blog'); ?>">blog</a></li>
+                    <li><a onclick="closeMobileMenu()" href="<?php echo home_url('/blog'); ?>">blog</a></li>
                     <li><a onclick="closeMobileMenu()" href="#">pricing</a></li>
                 </ul>
             </nav>

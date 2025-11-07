@@ -1,8 +1,8 @@
 // Testimonials Slider - Scroll by groups
 let currentSlide = 0;
 const sliderTrack = document.getElementById("sliderTrack");
-const slides = document.querySelectorAll(".slide");
-const totalSlides = slides.length;
+let slides = document.querySelectorAll(".slide");
+let totalSlides = slides.length;
 const dotsContainer = document.getElementById("sliderDots");
 let autoSlideInterval;
 
@@ -187,6 +187,8 @@ if (sliderWrapper) {
 
 // ======================================== fetch rest api =================================================
 
+// ==================== render provider==============================
+
 document.addEventListener("DOMContentLoaded", async () => {
   // const baseURL = window.location.origin;
   const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
@@ -303,4 +305,132 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("Lỗi khi fetch providers:", error);
     proxy_best.innerHTML = `<p style="color: red;">Không thể tải dữ liệu providers. Vui lòng kiểm tra API.</p>`;
   }
+});
+
+// ========================== render post ==========================
+
+document.addEventListener("DOMContentLoaded",async()=>{
+
+  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
+  const post_grid = document.querySelector(".guides-grid");
+
+  post_grid.innerHTML = "";
+
+  
+  try{
+    const res = await fetch(`${API_BASE}/cpt_posts`);
+    const post = await res.json();
+
+    post1 = post.sort(() => Math.random() - 0.5).slice(0, 6);
+
+    let out = "";
+
+    post1.forEach((p)=>{
+      const data = p.meta;
+      const tags = data?._post_tag;
+      const author = data?.post_date;
+      const title = p.title?.rendered;
+      const image = data?.post_image;
+      const sdesc = data?.post_sdesc;
+      const url1 = `${WP_HOME}/blog/${encodeURIComponent(p.slug)}`;
+
+       const tagsHTML = tags
+        .map(
+          (tag) => `
+          <span class="guide-tag">${tag}</span>
+        `
+        )
+        .join("");
+
+        
+      
+      out +=`
+      <div class="guide-card">
+          <img src="${image}" alt="Guide" class="guide-image">
+          <div class="guide-content">
+            <div class="guide-meta">
+              ${tagsHTML}
+              
+              <span class="guide-time">${author}</span>
+            </div>
+            <h3>${title}</h3>
+            <p>${sdesc}</p>
+            <a href="${url1}" class="guide-link">
+              Read guide
+              <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        
+      `;
+    });
+  post_grid.insertAdjacentHTML('beforeend', out);
+
+
+  }catch(error){
+    console.error("Loi khi fetch post",error);
+  }
+
+
+});
+
+
+//  ========================= fetch user review ==========================
+
+document.addEventListener("DOMContentLoaded", async()=>{
+
+  const BASE_API = `http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2/pages/6`;
+  const sliderTrack = document.getElementById("sliderTrack");
+
+  sliderTrack.innerHTML = "";
+  let out= "";
+
+  try{
+    const res = await fetch(`${BASE_API}`);
+    const data = await res.json(); 
+
+    const usr = data.home_reviews_data.home_reviews.user_reviews;
+
+    usr.forEach((u)=>{
+      
+      const rating = u.rating;     
+      const comment = u.comment;
+      const author = u.author_name;
+      const role = u.author_role;
+      const date = u.date;
+      const stars = "★".repeat(parseInt(rating)) + "☆".repeat(5 - parseInt(rating));
+
+      out +=`
+            <div class="slide">
+              <div class="testimonial-card">
+                <div class="testimonial-stars">${stars}</div>
+                <p class="testimonial-text">"${comment}"</p>
+                <div class="testimonial-author">
+                  <div class="author-avatar">${author.charAt(0)}</div>
+                  <div class="author-info">
+                    <h4>${author}</h4>
+                    <p>${role}</p>
+                  </div>
+                </div>
+              </div>
+            </div>`
+    })
+
+    sliderTrack.innerHTML = out;
+
+    // --- CẬP NHẬT SLIDES VÀ TỔNG SỐ ---
+    slides = document.querySelectorAll(".slide");
+    totalSlides = slides.length;
+
+    // Reset currentSlide
+    currentSlide = 0;
+
+    // Tạo dot dựa trên số slide thực tế
+    createDots();
+    updateSlider();
+    
+  }catch(err){
+    console.log("Fetch data khong thanh cong: ",err);
+  }
+
 });

@@ -342,10 +342,12 @@
       </div>
 
       <div class="view-all">
+        <a href="<?php echo home_url('/blog'); ?>">
         <button class="btn-view-all">
           See All Guides
           <i class="fa-solid fa-arrow-right"></i>
         </button>
+        </a>
       </div>
     </div>
   </section>

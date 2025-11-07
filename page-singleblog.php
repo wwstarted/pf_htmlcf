@@ -74,9 +74,7 @@
       </p>
 
       <div class="articles-grid">
-        
           <!-- fetch data -->
-        
       </div>
     </section>
 

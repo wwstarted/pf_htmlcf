@@ -31,7 +31,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await res.json();
       
       allProviders = data;
-      console.log("Providers loaded:", allProviders);
       
       renderProviders();
     } catch (error) {
@@ -47,10 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   function renderFilterButtons() {
     const container = document.querySelector(".filter-buttons");
     container.innerHTML = "";
-    if (!container) {
-      console.warn("Filter buttons container not found");
-      return;
-    }
 
     let out = '<button class="filter-btn active" data-category="all">All</button>';
 
@@ -156,10 +151,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Render provider cards
     const grid = document.querySelector(".providers-grid");
     grid.innerHTML = "";
-    if (!grid) {
-      console.warn("Providers grid not found");
-      return;
-    }
 
     if (paginated.length === 0) {
       grid.innerHTML = '<div class="loading">No providers found</div>';
@@ -253,7 +244,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const badgeHTML = tag ? `<span class="badgerv ${badgeClass}">${tag}</span>` : "";
 
     // Generate stars (5 stars)
-    const starsHTML = '<span class="star">★</span>'.repeat(5);
+    const fullStars = Math.floor(rating);
+    const starsHTML = "★".repeat(fullStars) + "☆".repeat(5 - fullStars);
+    // const starsHTML = '<span class="star">★</span>'.repeat(5);
     const url = `${WP_HOME}/reviews/${encodeURIComponent(provider.slug)}`;
 
     return `
@@ -316,11 +309,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
 
-    // Update prev/next buttons
     prevBtn.disabled = currentPage === 1;
     nextBtn.disabled = currentPage === totalPages || totalPages === 0;
 
-    // Generate page numbers
     let pages = [];
 
     if (totalPages <= 7) {

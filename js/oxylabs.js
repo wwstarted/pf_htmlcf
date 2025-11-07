@@ -780,28 +780,34 @@ document.addEventListener("DOMContentLoaded", async () => {
   } catch (err) {
     console.error("Lỗi fetch header:", err);
   }
-
-
 });
 
 
 // ============================= fetch supports ======================
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
+  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
   let sharedowId = null;
 
-  async function getSharedOverviewId() {
-    if (sharedowId) return sharedowId;
-    const params = new URLSearchParams(window.location.search);
-    let postId = params.get("provider_id");
-    sharedowId = postId;
-    console.log("✅ Post ID dùng chung:", sharedowId);
-    return sharedowId;
-  }
+  // async function getSharedOverviewId() {
+  //   if (sharedowId) return sharedowId;
+  //   const params = new URLSearchParams(window.location.search);
+  //   let postId = params.get("provider_id");
+  //   sharedowId = postId;
+  //   console.log("✅ Post ID dùng chung:", sharedowId);
+  //   return sharedowId;
+  // }
 
-  const owId = await getSharedOverviewId();
+  // const owId = await getSharedOverviewId();
 
+
+  function getSlugFromPath() {
+  const parts = location.pathname.split('/').filter(Boolean); // ['reviews','proxy-seller']
+  // giả sử slug luôn ở vị trí cuối
+  return parts[parts.length - 1] || null;
+}
+
+ const owId = await getSlugFromPath();
 
    const banner = document.querySelector(".oxyl-support-grid");
   
@@ -975,7 +981,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         starsHtml += '<i class="fa-solid fa-star"></i>';
       }
       
-      // Half star (optional, nếu có rating như 4.5)
+      // Half star 
       if (hasHalfStar) {
         starsHtml += '<i class="fa-solid fa-star-half-stroke"></i>';
       }
@@ -1192,37 +1198,54 @@ document.addEventListener("DOMContentLoaded", async () => {
       return parseFloat(value.toString().replace(/[^0-9.]/g, ''));
     }
 
-    // Generate scatter dots SVG (giống design)
-    function generateScatterDots(count) {
-      const dots = [];
-      const basePositions = [
-        // Row 1 - top
-        {x: 15, y: 20}, {x: 35, y: 15}, {x: 55, y: 22}, {x: 75, y: 18}, 
-        {x: 95, y: 24}, {x: 115, y: 16}, {x: 135, y: 20}, {x: 155, y: 23},
-        {x: 175, y: 18}, {x: 195, y: 21}, {x: 215, y: 19},
-        // Row 2  
-        {x: 25, y: 42}, {x: 45, y: 38}, {x: 65, y: 44}, {x: 85, y: 40},
-        {x: 105, y: 45}, {x: 125, y: 39}, {x: 145, y: 43}, {x: 165, y: 41},
-        {x: 185, y: 46}, {x: 205, y: 40},
-        // Row 3
-        {x: 18, y: 62}, {x: 38, y: 58}, {x: 58, y: 65}, {x: 78, y: 60},
-        {x: 98, y: 66}, {x: 118, y: 59}, {x: 138, y: 63}, {x: 158, y: 61},
-        {x: 178, y: 67}, {x: 198, y: 62}, {x: 218, y: 64},
-        // Center big dots
-        {x: 160, y: 53, size: 14, opacity: 0.7}
-      ];
-      
-      basePositions.forEach((pos, i) => {
-        if (i >= count) return;
-        const size = pos.size || (2 + Math.random() * 2);
-        const opacity = pos.opacity || (0.35 + Math.random() * 0.35);
-        dots.push(`<circle cx="${pos.x}" cy="${pos.y}" r="${size}" fill="#60a5fa" opacity="${opacity}" />`);
-      });
-      
-      return `<svg class="oxyl-scatter-dots" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
-        ${dots.join('')}
-      </svg>`;
-    }
+    // Generate scatter dots
+  function generateScatterDots(count) {
+  const dots = [];
+
+  // Vị trí small dots nền
+  const basePositions = [
+    { x: 15, y: 20 }, { x: 35, y: 15 }, { x: 55, y: 22 }, { x: 75, y: 18 }, 
+    { x: 95, y: 24 }, { x: 115, y: 16 }, { x: 135, y: 20 }, { x: 155, y: 23 },
+    { x: 175, y: 18 }, { x: 195, y: 21 }, { x: 215, y: 19 },
+    { x: 25, y: 42 }, { x: 45, y: 38 }, { x: 65, y: 44 }, { x: 85, y: 40 },
+    { x: 105, y: 45 }, { x: 125, y: 39 }, { x: 145, y: 43 }, { x: 165, y: 41 },
+    { x: 185, y: 46 }, { x: 205, y: 40 },
+    { x: 18, y: 62 }, { x: 38, y: 58 }, { x: 58, y: 65 }, { x: 78, y: 60 },
+    { x: 98, y: 66 }, { x: 118, y: 59 }, { x: 138, y: 63 }, { x: 158, y: 61 },
+    { x: 178, y: 67 }, { x: 198, y: 62 }, { x: 218, y: 64 }
+  ];
+
+  // Draw small dots
+  basePositions.forEach((pos, i) => {
+    if (i >= count) return;
+
+    const size = 2 + Math.random() * 2;
+    const opacity = 0.35 + Math.random() * 0.35;
+
+    dots.push(`
+      <circle cx="${pos.x}" cy="${pos.y}" r="${size}" fill="#60a5fa" opacity="${opacity}" />
+    `);
+  });
+
+  // ✅ Add 1 random big dot
+  const bigDot = {
+    x: Math.random() * 240,  // SVG width
+    y: Math.random() * 80,   // SVG height
+    r: 12 + Math.random() * 4,
+    opacity: 0.6 + Math.random() * 0.3
+  };
+
+  dots.push(`
+    <circle cx="${bigDot.x}" cy="${bigDot.y}" r="${bigDot.r}" fill="#60a5fa" opacity="${bigDot.opacity}" />
+  `);
+
+  return `
+    <svg class="oxyl-scatter-dots" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
+      ${dots.join("")}
+    </svg>
+  `;
+}
+
 
     function generateCircularProgress(value, maxValue = 1) {
       const percentage = Math.min(((maxValue - value) / maxValue) * 75, 75);
@@ -1288,6 +1311,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           
       } else if (isLargeNumber(value)) {
         // Card với scatter dots (dots ở dưới)
+        const newValue = Number(value);
         cardClass += " oxyl-card-scatter";
         const dotCount = Math.min(Math.floor(numericValue / 300), 35);
         out += `
@@ -1296,7 +1320,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               ${icon ? `<div class="oxyl-stat-icon"><i class="${icon}"></i></div>` : ''}
               ${tag ? `<span class="oxyl-stat-tag">${tag}</span>` : ''}
             </div>
-            <h3 class="oxyl-stat-value">${value.toLocaleString()}</h3>
+            <h3 class="oxyl-stat-value">${newValue.toLocaleString("de-DE")}</h3>
             <p class="oxyl-stat-label">${title}</p>
             ${generateScatterDots(dotCount)}
           </article>`;
