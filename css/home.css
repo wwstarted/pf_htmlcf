@@ -119,7 +119,7 @@
   flex-wrap: wrap;
 }
 
-.btn {
+.btn-home {
   padding: 14px 28px;
   border-radius: 12px;
   font-weight: 600;
@@ -237,14 +237,21 @@
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  background: white;
+  /* background: white; */
+  background: radial-gradient(
+    circle at top right,
+    #e8f2ff,
+    #ffffff 100%
+  );
 }
 
 .hero-card-img {
+
   width: 100%;
   height: auto;
   display: block;
   border-radius: 24px;
+  /* box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); */
 }
 
 .hero-badge {
@@ -1603,4 +1610,425 @@
   .guides-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================================= */
+/*  add css for search form */
+/* Header Search Form */
+.header-search {
+  display: flex;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  background: #f5f5f5;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
+  overflow: visible;
+  transition: all 0.3s ease;
+  width: 220px;
+  position: relative;
+}
+
+.search-form:hover {
+  border-color: #449df0;
+  box-shadow: 0 2px 8px rgba(68, 157, 240, 0.15);
+}
+
+.search-form:focus-within {
+  border-color: #449df0;
+  box-shadow: 0 2px 12px rgba(68, 157, 240, 0.25);
+  background: white;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 8px 15px;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  width: 100%;
+}
+
+.search-input::placeholder {
+  color: #999;
+  font-weight: 300;
+}
+
+.search-button {
+  background: transparent;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.search-button:hover {
+  color: #449df0;
+  transform: scale(1.1);
+}
+
+.search-button i {
+  font-size: 16px;
+}
+
+/* Responsive cho form search */
+@media (max-width: 1200px) {
+  .search-form {
+    width: 180px;
+  }
+  
+  .header-search {
+    margin: 0 15px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .header-search {
+    display: none;
+  }
+}
+
+/* ============================================
+   PROXYFLOW SEARCH DROPDOWN STYLES
+   ============================================ */
+
+/* Search Dropdown Container */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 500px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  z-index: 10000;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+/* .search-dropdown.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+} */
+
+.search-dropdown.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+  background: white !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  color: inherit !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.search-dropdown-content {
+  position: relative;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+/* Custom Scrollbar */
+.search-dropdown-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-dropdown-content::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.search-dropdown-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}
+
+.search-dropdown-content::-webkit-scrollbar-thumb:hover {
+  background: #449df0;
+}
+
+/* Loading State */
+.search-loading {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px 20px;
+  color: #666;
+}
+
+.search-dropdown.loading .search-loading {
+  display: flex;
+}
+
+.search-dropdown.loading .search-results,
+.search-dropdown.loading .search-empty,
+.search-dropdown.loading .search-error {
+  display: none;
+}
+
+.search-loading i {
+  font-size: 20px;
+  color: #449df0;
+}
+
+/* Empty State */
+.search-empty {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.search-dropdown.empty .search-empty {
+  display: flex;
+}
+
+.search-dropdown.empty .search-results,
+.search-dropdown.empty .search-loading,
+.search-dropdown.empty .search-error {
+  display: none;
+}
+
+.search-empty i {
+  font-size: 40px;
+  color: #ddd;
+  margin-bottom: 15px;
+}
+
+.search-empty p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.search-empty span {
+  font-size: 13px;
+  color: #999;
+}
+
+/* Error State */
+.search-error {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.search-dropdown.error .search-error {
+  display: flex;
+}
+
+.search-dropdown.error .search-results,
+.search-dropdown.error .search-loading,
+.search-dropdown.error .search-empty {
+  display: none;
+}
+
+.search-error i {
+  font-size: 40px;
+  color: #ff6b6b;
+  margin-bottom: 15px;
+}
+
+.search-error p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #666;
+}
+
+/* Search Results */
+.search-results {
+  padding: 8px;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.search-result-item:hover,
+.search-result-item.selected {
+  background: #f8f9fa;
+  border-color: rgba(68, 157, 240, 0.3);
+}
+
+.search-result-item:hover .search-result-arrow,
+.search-result-item.selected .search-result-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.search-result-item:hover .search-result-title,
+.search-result-item.selected .search-result-title {
+  color: #449df0;
+}
+
+/* Result Image */
+.search-result-image {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.search-result-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.search-result-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+}
+
+/* Result Content */
+.search-result-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.search-result-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+  transition: color 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+
+.search-result-title mark {
+  background: #dbeafe;
+  color: #449df0;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 700;
+}
+
+.search-result-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffa500;
+  flex-shrink: 0;
+}
+
+.search-result-rating i {
+  font-size: 12px;
+}
+
+.search-result-excerpt {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-result-price {
+  font-size: 12px;
+  font-weight: 600;
+  color: #449df0;
+  display: inline-block;
+  padding: 2px 8px;
+  background: rgba(68, 157, 240, 0.1);
+  border-radius: 4px;
+}
+
+/* Result Arrow */
+.search-result-arrow {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #449df0;
+  opacity: 0;
+  transform: translateX(-5px);
+  transition: all 0.2s ease;
+}
+
+.search-result-arrow i {
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .search-dropdown {
+    width: 380px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .search-dropdown {
+    display: none;
+  }
+}
+
+/* Animation for dropdown */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.search-dropdown.active {
+  animation: slideDown 0.3s ease forwards;
 }

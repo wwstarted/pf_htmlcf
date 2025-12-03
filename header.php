@@ -29,6 +29,17 @@
                         </ul>
                     </nav>
                 </div>
+
+                <div class="header-search">
+                    <form action="<?php echo home_url('/'); ?>" method="get" class="search-form">
+                        <input type="text" name="s" placeholder="Search..." class="search-input"
+                            value="<?php echo get_search_query(); ?>">
+                        <button type="submit" class="search-button">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </form>
+                </div>
+
                 <div class="header-right">
                     <a href="#" class="btn btn-sign-in">sign in</a>
                     <a href="#" class="btn btn-start-free">Start Free Trial</a>

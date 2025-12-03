@@ -82,6 +82,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       renderPagination();
     }
 
+    async function search(post = 'all'){
+      let url = `${API_BASE}/cpt_posts?embed&per_page=100`;
+      if(categoryId !== 'all') url += `&post_category=${categoryId}`
+    }
+
     /** --- Render danh sách bài viết --- **/
     function renderPosts() {
       const start = (currentPage - 1) * postsPerPage;
