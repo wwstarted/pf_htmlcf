@@ -1027,6 +1027,11 @@ function provider_home_info_callback($post)
             <!-- <p class="field-description">Giá khởi điểm (chỉ nhập số, vd: 15 cho $15/GB)</p> -->
         </div>
 
+        <div class="provider-field">
+            <label>price</label>
+            <input type="number" name="provider_price" value="<?php echo esc_attr($price); ?>" step="0.01" min="0" placeholder="0.0">
+        </div>
+
     </div>
 
     <script>
@@ -3474,7 +3479,7 @@ function save_provider_description($post_id)
             }
         }
     }
-    // Thu thập Perfect For
+    // Thu thập Perfect Forx    
     if (isset($_POST['perfect_for_title']) && is_array($_POST['perfect_for_title'])) {
         $pf_titles = $_POST['perfect_for_title'];
         $pf_icons = isset($_POST['perfect_for_icon']) ? $_POST['perfect_for_icon'] : array();

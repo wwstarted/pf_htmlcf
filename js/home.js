@@ -434,3 +434,75 @@ document.addEventListener("DOMContentLoaded", async()=>{
   }
 
 });
+
+
+//  ======================= fetch user pw ==============================
+
+document.addEventListener("DOMContentLoaded", async()=>{
+
+  const API_BASE = `http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2`;
+  const rander = document.querySelector(".user_grid");
+  let add = "";
+
+  try{
+
+    const res = await fetch(`${API_BASE}/cpt_posts/6`);
+    const data = await res.json();
+
+    const usr = data.home_reviews_data.home_reviews.user_reviews;
+
+    usr.forEach((p)=>{
+
+      const rating = p.rating;
+      const comment = p.comment;
+      const author = p.author_name;
+      const role = p.author_role;
+      const date = p.date;
+      const stars = "★".repeat(parseInt(rating)) + "☆".repeat(5 - parseInt(rating));
+
+      add+=`
+      <div class="slide">
+              <div class="testimonial-card">
+                <div class="testimonial-stars">${stars}</div>
+                <p class="testimonial-text">"${comment}"</p>
+                <div class="testimonial-author">
+                  <div class="author-avatar">${author.charAt(0)}</div>
+                  <div class="author-info">
+                    <h4>${author}</h4>
+                    <p>${role}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+      `
+    });
+
+    render.innerHTML= add;
+  }catch(err){
+    console.error("loi khi fetch data: ",err)
+  }
+
+})
+
+
+document.addEventListener("DOMContentLoaded",async()=>{
+  const API_BASE = "http://localhost/PF_HTMLCF/wordpress/wp-json/wp/v2";
+  const render = document.querySelector("");
+
+  try{
+    const res = await fetch(`${API_BASE}/pages/6`);
+    const data = await res.json();
+
+    const data1 = data.sort(()=> Math.random()- 0.5).slice(0,6);
+
+    data1.forEach((p)=>{
+      
+    })
+
+  }catch(err){
+    console.error("Loi khi fetch data: ", err);
+  }
+
+
+
+})
