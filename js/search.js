@@ -1,10 +1,18 @@
+// ============================================
+// PROXYFLOW SEARCH SYSTEM - MULTI ENDPOINT
+// ============================================
+
 class ProxySearch {
   constructor() {
-    this.API_URL = 'https://proxyflowpxp.com/wp-json/wp/v2/providers';
+    this.API_PROVIDERS = 'https://proxyflowpxp.com/wp-json/wp/v2/providers';
+    this.API_BLOG = 'https://proxyflowpxp.com/wp-json/wp/v2/cpt_posts';
+    
     this.state = {
       query: '',
-      results: [],
+      providerResults: [],
+      blogResults: [],
       allProviders: [],
+      allBlogs: [],
       isLoading: false,
       isOpen: false,
       selectedIndex: -1,
@@ -14,29 +22,30 @@ class ProxySearch {
     
     this.debounceTimer = null;
     this.MIN_CHARS = 3;
-    this.MAX_RESULTS = 5;
+    this.MAX_RESULTS_PER_SECTION = 5;
     this.DEBOUNCE_TIME = 500;
+    
     this.init();
   }
 
-  // init()
+  // Khởi tạo
   async init() {
     this.cacheElements();
     this.attachEvents();
-    await this.fetchAllProviders();
+    await this.fetchAllData();
   }
 
-  // dom element
+  // Cache các DOM elements
   cacheElements() {
     this.searchInput = document.querySelector('.search-input');
     this.searchForm = document.querySelector('.search-form');
     this.searchButton = document.querySelector('.search-button');
     
-    // input dropdown
+    // Tạo dropdown box
     this.createDropdown();
   }
 
-  // dropdown html
+  // Tạo dropdown HTML
   createDropdown() {
     const dropdown = document.createElement('div');
     dropdown.className = 'search-dropdown';
@@ -46,10 +55,28 @@ class ProxySearch {
           <i class="fa-solid fa-spinner fa-spin"></i>
           <span>Searching...</span>
         </div>
-        <div class="search-results"></div>
+        <div class="search-results">
+          <!-- Providers Section -->
+          <div class="search-section" id="providers-section">
+            <div class="search-section-header">
+              <i class="fa-solid fa-server"></i>
+              <span>PROVIDERS</span>
+            </div>
+            <div class="search-section-results" id="providers-results"></div>
+          </div>
+          
+          <!-- Blog Section -->
+          <div class="search-section" id="blog-section">
+            <div class="search-section-header">
+              <i class="fa-solid fa-newspaper"></i>
+              <span>ARTICLES</span>
+            </div>
+            <div class="search-section-results" id="blog-results"></div>
+          </div>
+        </div>
         <div class="search-empty">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <p>No proxies found</p>
+          <p>No results found</p>
           <span>Try different keywords</span>
         </div>
         <div class="search-error">
@@ -62,35 +89,41 @@ class ProxySearch {
     this.searchForm.style.position = 'relative';
     this.searchForm.appendChild(dropdown);
     this.dropdown = dropdown;
-    this.resultsContainer = dropdown.querySelector('.search-results');
+    this.providersContainer = dropdown.querySelector('#providers-results');
+    this.blogContainer = dropdown.querySelector('#blog-results');
+    this.providersSection = dropdown.querySelector('#providers-section');
+    this.blogSection = dropdown.querySelector('#blog-section');
   }
 
-  // Fetch all provider
-  async fetchAllProviders() {
+  // Fetch tất cả data từ 2 APIs
+  async fetchAllData() {
     try {
-      const response = await fetch(this.API_URL);
-      if (!response.ok) throw new Error('Failed to fetch providers');
+      const [providersRes, blogsRes] = await Promise.all([
+        fetch(this.API_PROVIDERS),
+        fetch(this.API_BLOG)
+      ]);
       
-      this.state.allProviders = await response.json();
-      console.log('Loaded providers:', this.state.allProviders.length);
+      if (!providersRes.ok || !blogsRes.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      
+      this.state.allProviders = await providersRes.json();
+      this.state.allBlogs = await blogsRes.json();
+      
+      console.log('✅ Loaded providers:', this.state.allProviders.length);
+      console.log('✅ Loaded blogs:', this.state.allBlogs.length);
     } catch (error) {
-      console.error('Error fetching providers:', error);
+      console.error('❌ Error fetching data:', error);
       this.state.error = error.message;
     }
   }
+
   // Attach event listeners
   attachEvents() {
-    // Input events
     this.searchInput.addEventListener('input', (e) => this.handleInput(e));
     this.searchInput.addEventListener('focus', () => this.handleFocus());
-    
-    // Form submit
     this.searchForm.addEventListener('submit', (e) => this.handleSubmit(e));
-    
-    // Keyboard navigation
     this.searchInput.addEventListener('keydown', (e) => this.handleKeyboard(e));
-    
-    // Click outside to close
     document.addEventListener('click', (e) => this.handleClickOutside(e));
   }
 
@@ -98,65 +131,53 @@ class ProxySearch {
   handleInput(e) {
     const query = e.target.value.trim();
     this.state.query = query;
-
-    // Clear previous timer
     clearTimeout(this.debounceTimer);
-
-    // Reset selected index
     this.state.selectedIndex = -1;
 
-    // Nếu dưới MIN_CHARS thì đóng dropdown
     if (query.length < this.MIN_CHARS) {
       this.closeDropdown();
       return;
     }
 
-    // Hiển thị loading
     this.showLoading();
-
-    // Debounce search
     this.debounceTimer = setTimeout(() => {
       this.performSearch(query);
     }, this.DEBOUNCE_TIME);
   }
 
-  // Xử lý focus
   handleFocus() {
-    if (this.state.query.length >= this.MIN_CHARS && this.state.results.length > 0) {
-      this.openDropdown();
+    if (this.state.query.length >= this.MIN_CHARS) {
+      const hasResults = this.state.providerResults.length > 0 || this.state.blogResults.length > 0;
+      if (hasResults) this.openDropdown();
     }
   }
 
-  // Xử lý submit form
   handleSubmit(e) {
     e.preventDefault();
-    
-    if (this.state.selectedIndex >= 0 && this.state.results[this.state.selectedIndex]) {
-      // Nếu đang select item thì navigate đến item đó
-      this.selectResult(this.state.results[this.state.selectedIndex]);
-    } else if (this.state.query.length >= this.MIN_CHARS) {
-      // Nếu không có item nào được select thì search
+    if (this.state.query.length >= this.MIN_CHARS) {
       this.performSearch(this.state.query);
     }
   }
 
-  // Xử lý keyboard navigation
   handleKeyboard(e) {
-    if (!this.state.isOpen || this.state.results.length === 0) return;
+    if (!this.state.isOpen) return;
+
+    const totalResults = this.state.providerResults.length + this.state.blogResults.length;
+    if (totalResults === 0) return;
 
     switch(e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        this.navigateDown();
+        this.navigateDown(totalResults);
         break;
       case 'ArrowUp':
         e.preventDefault();
-        this.navigateUp();
+        this.navigateUp(totalResults);
         break;
       case 'Enter':
         e.preventDefault();
         if (this.state.selectedIndex >= 0) {
-          this.selectResult(this.state.results[this.state.selectedIndex]);
+          this.selectCurrentItem();
         }
         break;
       case 'Escape':
@@ -166,26 +187,23 @@ class ProxySearch {
     }
   }
 
-  // Navigate down
-  navigateDown() {
-    if (this.state.selectedIndex < this.state.results.length - 1) {
+  navigateDown(total) {
+    if (this.state.selectedIndex < total - 1) {
       this.state.selectedIndex++;
       this.updateSelectedItem();
     }
   }
 
-  // Navigate up
-  navigateUp() {
+  navigateUp(total) {
     if (this.state.selectedIndex > 0) {
       this.state.selectedIndex--;
       this.updateSelectedItem();
     }
   }
 
-  // Update selected item visual
   updateSelectedItem() {
-    const items = this.resultsContainer.querySelectorAll('.search-result-item');
-    items.forEach((item, index) => {
+    const allItems = this.dropdown.querySelectorAll('.search-result-item');
+    allItems.forEach((item, index) => {
       if (index === this.state.selectedIndex) {
         item.classList.add('selected');
         item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -195,7 +213,15 @@ class ProxySearch {
     });
   }
 
-  // Click outside to close
+  selectCurrentItem() {
+    const allItems = this.dropdown.querySelectorAll('.search-result-item');
+    const selectedItem = allItems[this.state.selectedIndex];
+    if (selectedItem) {
+      const link = selectedItem.dataset.link;
+      window.location.href = link;
+    }
+  }
+
   handleClickOutside(e) {
     if (!this.searchForm.contains(e.target)) {
       this.closeDropdown();
@@ -204,38 +230,52 @@ class ProxySearch {
 
   // Perform search
   performSearch(query) {
-    // Check cache first
-    if (this.state.cache[query]) {
-      console.log('📦 Using cached results for:', query);
-      this.state.results = this.state.cache[query];
+    const cacheKey = query.toLowerCase();
+    
+    if (this.state.cache[cacheKey]) {
+      console.log('Using cached results');
+      const cached = this.state.cache[cacheKey];
+      this.state.providerResults = cached.providers;
+      this.state.blogResults = cached.blogs;
       this.renderResults();
       return;
     }
 
-    // Filter providers
     const queryLower = query.toLowerCase();
-    const filtered = this.state.allProviders.filter(provider => {
+    
+    // Filter providers
+    const filteredProviders = this.state.allProviders.filter(provider => {
       const title = provider.title?.rendered?.toLowerCase() || '';
-      const excerpt = provider.excerpt?.rendered?.toLowerCase() || '';
-      
-      return title.includes(queryLower) || excerpt.includes(queryLower);
-    });
+      const summary = provider.provider_data?.summary?.toLowerCase() || '';
+      return title.includes(queryLower) || summary.includes(queryLower);
+    }).slice(0, this.MAX_RESULTS_PER_SECTION);
 
-    // Limit results
-    this.state.results = filtered.slice(0, this.MAX_RESULTS);
+    // Filter blogs
+    const filteredBlogs = this.state.allBlogs.filter(blog => {
+      const title = blog.title?.rendered?.toLowerCase() || '';
+      const desc = blog.meta?.post_sdesc?.toLowerCase() || '';
+      return title.includes(queryLower) || desc.includes(queryLower);
+    }).slice(0, this.MAX_RESULTS_PER_SECTION);
+
+    this.state.providerResults = filteredProviders;
+    this.state.blogResults = filteredBlogs;
     
     // Cache results
-    this.state.cache[query] = this.state.results;
+    this.state.cache[cacheKey] = {
+      providers: filteredProviders,
+      blogs: filteredBlogs
+    };
 
-    // Render
     this.renderResults();
   }
 
   // Render results
   renderResults() {
     this.state.isLoading = false;
-    
-    if (this.state.results.length === 0) {
+    const hasProviders = this.state.providerResults.length > 0;
+    const hasBlog = this.state.blogResults.length > 0;
+
+    if (!hasProviders && !hasBlog) {
       this.showEmpty();
       return;
     }
@@ -245,17 +285,35 @@ class ProxySearch {
     this.hideEmpty();
     this.hideError();
 
-    // Render each result
-    const html = this.state.results.map((provider, index) => {
+    // Render providers
+    if (hasProviders) {
+      this.providersSection.style.display = 'block';
+      this.renderProviders();
+    } else {
+      this.providersSection.style.display = 'none';
+    }
+
+    // Render blogs
+    if (hasBlog) {
+      this.blogSection.style.display = 'block';
+      this.renderBlogs();
+    } else {
+      this.blogSection.style.display = 'none';
+    }
+  }
+
+  // Render providers
+  renderProviders() {
+    const html = this.state.providerResults.map((provider, index) => {
       const title = provider.title?.rendered || 'Untitled';
       const summary = provider.provider_data?.summary || '';
       const link = provider.link || '#';
       const logo = provider.provider_data?.logo || '';
       const rating = provider.provider_data?.rating || 0;
       const price = provider.provider_data?.price || 0;
-      
-      // Highlight matched text
       const highlightedTitle = this.highlightText(title, this.state.query);
+
+      const rate = Number(rating);
 
       return `
         <div class="search-result-item" data-index="${index}" data-link="${link}">
@@ -265,10 +323,10 @@ class ProxySearch {
           <div class="search-result-content">
             <div class="search-result-header">
               <h4 class="search-result-title">${highlightedTitle}</h4>
-              ${rating > 0 ? `<div class="search-result-rating"><i class="fa-solid fa-star"></i> ${rating}</div>` : ''}
+              ${rate > 0 ? `<div class="search-result-rating"><i class="fa-solid fa-star"></i> ${rate.toFixed(1)}</div>` : ''}
             </div>
             <p class="search-result-excerpt">${summary}</p>
-            ${price > 0 ? `<div class="search-result-price">From ${price}/mo</div>` : ''}
+            ${price > 0 ? `<div class="search-result-price">From $${price}/mo</div>` : ''}
           </div>
           <div class="search-result-arrow">
             <i class="fa-solid fa-arrow-right"></i>
@@ -277,35 +335,63 @@ class ProxySearch {
       `;
     }).join('');
 
-    this.resultsContainer.innerHTML = html;
-
-    // Attach click events
-    this.resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
-      item.addEventListener('click', () => {
-        const link = item.dataset.link;
-        window.location.href = link;
-      });
-    });
+    this.providersContainer.innerHTML = html;
+    this.attachClickEvents(this.providersContainer);
   }
 
-  // Select result
-  selectResult(provider) {
-    window.location.href = provider.link;
+  // Render blogs
+  renderBlogs() {
+    const html = this.state.blogResults.map((blog, index) => {
+      const title = blog.title?.rendered || 'Untitled';
+      const desc = blog.meta?.post_sdesc || '';
+      const link = blog.link || '#';
+      const image = blog.meta?.post_image || '';
+      const author = blog.meta?.post_author || '';
+      const date = blog.meta?.post_date || '';
+      const highlightedTitle = this.highlightText(title, this.state.query);
+
+      return `
+        <div class="search-result-item" data-index="${this.state.providerResults.length + index}" data-link="${link}">
+          <div class="search-result-image">
+            ${image ? `<img src="${image}" alt="${title}">` : `<div class="search-result-placeholder"><i class="fa-solid fa-newspaper"></i></div>`}
+          </div>
+          <div class="search-result-content">
+            <h4 class="search-result-title">${highlightedTitle}</h4>
+            <p class="search-result-excerpt">${this.truncate(desc, 80)}</p>
+            ${author ? `<div class="search-result-meta"><i class="fa-solid fa-user"></i> ${author} ${date ? `• ${date}` : ''}</div>` : ''}
+          </div>
+          <div class="search-result-arrow">
+            <i class="fa-solid fa-arrow-right"></i>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    this.blogContainer.innerHTML = html;
+    this.attachClickEvents(this.blogContainer);
+  }
+
+  attachClickEvents(container) {
+    container.querySelectorAll('.search-result-item').forEach(item => {
+      item.addEventListener('click', () => {
+        window.location.href = item.dataset.link;
+      });
+    });
   }
 
   // Highlight text
   highlightText(text, query) {
     if (!query) return text;
-    
-    const regex = new RegExp(`(${query})`, 'gi');
+    const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
     return text.replace(regex, '<mark>$1</mark>');
   }
 
-  // Strip HTML tags
-  stripHtml(html) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
+  escapeRegex(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  truncate(text, length) {
+    return text.length > length ? text.substring(0, length) + '...' : text;
   }
 
   // Show/Hide states

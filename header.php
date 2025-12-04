@@ -19,7 +19,7 @@
                 </a>
                 <div class="header-menu">
                     <nav>
-                        <ul>
+                        <ul style="padding-left: 115px; padding-right: 15px;">
                             <li><a href="#">proxies</a></li>
                             <li><a href="#">solutions</a></li>
                             <li><a href="#">guides</a></li>

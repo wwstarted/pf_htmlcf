@@ -29,7 +29,7 @@ function proxyflow_theme_enqueue_assets()
 
 
     // Gọi file JS trong thư mục /js/
-    wp_enqueue_script('proxyflow-blog', get_template_directory_uri() . '/js/blog.js', array('jquery'), filemtime(get_template_directory() . '/js/blog.js'), true);
+    wp_enqueue_script('proxyflow-blog', get_template_directory_uri() . '/js/blog2.js', array('jquery'), filemtime(get_template_directory() . '/js/blog2.js'), true);
     wp_enqueue_script('proxyflow-post', get_template_directory_uri() . '/js/post.js', array('jquery'), filemtime(get_template_directory() . '/js/post.js'), true);
     wp_enqueue_script('proxyflow-home', get_template_directory_uri() . '/js/home.js', array('jquery'), filemtime(get_template_directory() . '/js/home.js'), true);
     wp_enqueue_script('proxyflow-oxylabs', get_template_directory_uri() . '/js/oxylabs.js', array('jquery'), filemtime(get_template_directory() . '/js/oxylabs.js'), true);

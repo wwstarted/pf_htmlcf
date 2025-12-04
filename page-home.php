@@ -3,7 +3,6 @@
 Template Name: Home Page
 */
 ?>
-<!-- Gọi header đã tách (function hộ trợ từ WP) -->
 <?php get_header(); ?>
 
 <!-- HERO SECTION -->
@@ -46,8 +45,8 @@ Template Name: Home Page
 
             <div class="hero-right">
                 <div class="hero-card">
-                    <img src="https://poxies122.vercel.app/images/design-mode/col_vps_nmve.webp" alt="Intel Xeon Proxy"
-                        class="hero-card-img">
+                    <img src="https://static.vecteezy.com/system/resources/previews/019/804/587/original/modern-technology-world-map-globe-crop-out-png.png"
+                        alt="Intel Xeon Proxy" class="hero-card-img">
 
                     <div class="hero-badge live">
                         <i class="fa-solid fa-circle"></i> LIVE NETWORK<i class="fa-solid fa-ellipsis"></i>
@@ -56,15 +55,15 @@ Template Name: Home Page
                     <div class="hero-stats-bottom">
                         <div class="stat-box">
                             <span class="stat-label">UPTIME</span>
-                            <span class="stat-value">99.9%</span>
+                            <span class="stat-value-home">99.9%</span>
                         </div>
                         <div class="stat-box">
                             <span class="stat-label">NODES</span>
-                            <span class="stat-value">175M+</span>
+                            <span class="stat-value-home">175M+</span>
                         </div>
                         <div class="stat-box">
                             <span class="stat-label">LATENCY</span>
-                            <span class="stat-value">~120ms</span>
+                            <span class="stat-value-home">~120ms</span>
                         </div>
                     </div>
                 </div>
@@ -83,8 +82,7 @@ Template Name: Home Page
         </div>
 
         <div class="proxy-list">
-            <!-- Provider 1 -->
-            <!-- fetch data here -->
+            <!-- render data here -->
         </div>
 
         <div class="view-all">

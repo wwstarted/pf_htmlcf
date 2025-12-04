@@ -234,20 +234,24 @@
 
 .hero-card {
   position: relative;
-  border-radius: 24px;
+  /* border-radius: 24px; */
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); */
   /* background: white; */
-  background: radial-gradient(
+  /* background: radial-gradient(
     circle at top right,
     #e8f2ff,
     #ffffff 100%
-  );
+  ); */
+  max-width: 620;
+  margin-left: auto;
+  justify-content: center;
+  display: flex;
 }
 
 .hero-card-img {
 
-  width: 100%;
+  width: 80%;
   height: auto;
   display: block;
   border-radius: 24px;
@@ -257,7 +261,8 @@
 .hero-badge {
   position: absolute;
   top: 20px;
-  right: 20px;
+  right: 50%;
+  transform: translateX(50%);
   background: white;
   padding: 8px 16px;
   border-radius: 6px;
@@ -272,7 +277,7 @@
 }
 
 .hero-badge.live {
-  font-weight: 300;
+  font-weight: 500;
 }
 
 .hero-badge.live i {
@@ -326,27 +331,28 @@
 .stat-box {
   flex: 1;
   background: rgba(255, 255, 255, 0.571);
+  /* background: #f1f5ff; */
   backdrop-filter: blur(10px);
   padding: 12px 16px;
   border-radius: 12px;
-  text-align: left;
+  text-align: center;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .stat-box .stat-label {
   display: block;
-  font-size: 12px;
-  color: #6b7280;
-  font-weight: 400;
+  font-size: 14px;
+  color: #000000;
+  font-weight: 600;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
 }
 
-.stat-box .stat-value {
+.stat-box .stat-value-home {
   display: block;
-  font-size: 14px;
-  font-weight: 300;
-  color: #449df0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #0084ff;
 }
 
 /* Responsive cho hero card */
@@ -1716,16 +1722,10 @@
   visibility: hidden;
   transform: translateY(-10px);
   transition: all 0.3s ease;
-  z-index: 10000;
+  z-index: 1000;
   max-height: 500px;
   overflow: hidden;
 }
-
-/* .search-dropdown.active {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-} */
 
 .search-dropdown.active {
   opacity: 1 !important;
@@ -1862,6 +1862,38 @@
 /* Search Results */
 .search-results {
   padding: 8px;
+}
+
+/* Search Section */
+.search-section {
+  margin-bottom: 12px;
+}
+
+.search-section:last-child {
+  margin-bottom: 0;
+}
+
+.search-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #f0f0f0;
+  margin-bottom: 4px;
+}
+
+.search-section-header i {
+  font-size: 12px;
+  color: #449df0;
+}
+
+.search-section-results {
+  /* Container for result items */
 }
 
 .search-result-item {
@@ -2002,6 +2034,20 @@
 
 .search-result-arrow i {
   font-size: 14px;
+}
+
+/* Blog Meta (Author + Date) */
+.search-result-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #999;
+  margin-top: 4px;
+}
+
+.search-result-meta i {
+  font-size: 10px;
 }
 
 /* Responsive */
